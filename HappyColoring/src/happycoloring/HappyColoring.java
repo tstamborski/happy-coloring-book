@@ -42,6 +42,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private BufferedImage circlePattern, squarePattern, diamondPattern, starPattern, softPattern;
     private Pencil pencil, softbrush;
     private Rubber rubber;
+    private PaintBucket bucket;
     
     private ResourceBundle i18n;
     
@@ -125,6 +126,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getDiamondRubberItem().addActionListener((ae)->{rubber.setShape(diamondPattern); setCurrentTool(rubber);});
         menu.getStarRubberItem().addActionListener((ae)->{rubber.setShape(starPattern); setCurrentTool(rubber);});
         menu.getSoftbrushItem().addActionListener((ae)->setCurrentTool(softbrush));
+        menu.getBucketItem().addActionListener(ae -> setCurrentTool(bucket));
         
         menu.getNextItem().addActionListener(ae->nextPage());
         menu.getPreviousItem().addActionListener(ae->previousPage());
@@ -150,7 +152,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         shortcutToolbar.getRubberButton().addActionListener(ae -> setCurrentTool(rubber));
         shortcutToolbar.getSprayButton().addActionListener(ae -> setCurrentTool(null));
         shortcutToolbar.getSoftbrushButton().addActionListener(ae -> setCurrentTool(softbrush));
-        shortcutToolbar.getBucketButton().addActionListener(ae -> setCurrentTool(null));
+        shortcutToolbar.getBucketButton().addActionListener(ae -> setCurrentTool(bucket));
         shortcutToolbar.getSizeButtons().forEach(b -> b.addActionListener(ae -> setCurrentToolSize(b.getIntValue())));
         
         add(paletteToolbar, BorderLayout.EAST);
@@ -176,9 +178,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
         pencil = new Pencil(circlePattern, HappyPalette.getInstance().get(0).getColor(), DrawingTool.SIZE_BIG);
         rubber = new Rubber(circlePattern, DrawingTool.SIZE_BIG);
         softbrush = new Pencil(softPattern, HappyPalette.getInstance().get(0).getColor(), DrawingTool.SIZE_BIG);
+        bucket = new PaintBucket(HappyPalette.getInstance().get(0).getColor());
         
         pencil.setChangeListener(ce -> status.setDisplayedColor(pencil.getColor()));
         softbrush.setChangeListener(ce -> status.setDisplayedColor(softbrush.getColor()));
+        bucket.setChangeListener(ce -> status.setDisplayedColor(bucket.getColor()));
         
         currentDrawingTool = pencil;
     }
@@ -213,6 +217,17 @@ public class HappyColoring extends JFrame implements HappyI18n {
             shortcutToolbar.getRubberButton().setSelected(true);
         else if (currentDrawingTool == softbrush)
             shortcutToolbar.getSoftbrushButton().setSelected(true);
+        else if (currentDrawingTool == bucket)
+            shortcutToolbar.getBucketButton().setSelected(true);
+        
+        if (currentDrawingTool == bucket) {
+            menu.getSizeMenu().setEnabled(false);
+            shortcutToolbar.getSizeButtons().forEach(b -> b.setEnabled(false));
+        }
+        else {
+            menu.getSizeMenu().setEnabled(true);
+            shortcutToolbar.getSizeButtons().forEach(b -> b.setEnabled(true));
+        }
         
         status.setDisplayedColor(currentDrawingTool.getColor());
         if (pagesList.isEmpty())
