@@ -24,26 +24,79 @@
 package happycoloring;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class Rubber extends Pencil {
+public class Rubber implements DrawingTool {
+    private Color color;
+    private int size;
+    private BufferedImage shape, pattern;
+    private ChangeListener changeListener;
+
     public Rubber(BufferedImage shape, int size) {
-        super(shape, Color.white, size);
+        this.size = size;
+        this.shape = shape;
+        createPattern();
+    }
+
+    public ChangeListener getChangeListener() {
+        return changeListener;
+    }
+
+    public void setChangeListener(ChangeListener changeListener) {
+        this.changeListener = changeListener;
+    }
+    
+    public BufferedImage getShape() {
+        return shape;
+    }
+
+    public void setShape(BufferedImage shape) {
+        this.shape = shape;
+        createPattern();
     }
 
     @Override
-    public Color getColor() {
-        return Color.white;
+    public void setSize(int size) {
+        this.size = size;
+        createPattern();
+    }
+
+    @Override
+    public int getSize() {
+        return this.size;
+    }
+
+    @Override
+    public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
+        Graphics2D g2d = canvas.createGraphics();
+        g2d.drawImage(pattern, x-size/2, y-size/2, null);
     }
 
     @Override
     public void setColor(Color c) {
-        //Nie rob NIC
+        this.color = c;
+        createPattern();
     }
-    
+
+    @Override
+    public Color getColor() {
+        return this.color;
+    }
+
+    private void createPattern() {
+        pattern = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = pattern.createGraphics();
+        g2d.drawImage(shape, 0, 0, size, size, null);
+        
+        if (changeListener != null)
+            changeListener.stateChanged(new ChangeEvent(this));
+    }
     
 }

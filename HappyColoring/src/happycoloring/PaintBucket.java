@@ -61,7 +61,11 @@ public class PaintBucket implements DrawingTool {
         this.canvas = canvas;
         this.reference = ref;
         baseRGB = canvas.getRGB(x, y);
-        dstRGB = color.getRGB() | 0xff000000;
+        if (canvas.getType() == BufferedImage.TYPE_INT_BGR)
+            dstRGB = rgb2bgr(color.getRGB());
+        else
+            dstRGB = color.getRGB() | 0xff000000;
+            
         
         queue.clear();
         queue.add(new Coordinate(x,y));
@@ -124,6 +128,23 @@ public class PaintBucket implements DrawingTool {
             return false;
         
         return canvas.getRGB(c.getX(), c.getY()) != dstRGB;
+    }
+
+    private static int rgb2bgr(int rgb) {
+        int r, g, b;
+        int bgr;
+        
+        r = (rgb >> 16) & 0xff;
+        g = (rgb >> 8) & 0xff;
+        b = rgb & 0xff;
+        
+        bgr = 0;
+        bgr = bgr | r;
+        bgr = bgr | (g << 8);
+        bgr = bgr | (b << 16);
+        bgr = bgr | 0xff000000;
+        
+        return bgr;
     }
 }
 

@@ -70,6 +70,10 @@ public class HappyStatusBar extends JPanel implements HappyI18n{
             pageLabel.setText("");
     }
     
+    public void setDisplayedInfo(String text) {
+        pageLabel.setText(text);
+    }
+    
     public void setDisplayedCoord(int x, int y) {
         mouseLabel.setText(String.format("x: %4d y: %4d", x, y));
     }

@@ -25,9 +25,7 @@ package happycoloring;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -35,7 +33,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class Pencil implements DrawingTool, ImageObserver {
+public class Pencil implements DrawingTool {
     private int size;
     private Color color;
     private BufferedImage shape;
@@ -53,7 +51,7 @@ public class Pencil implements DrawingTool, ImageObserver {
     @Override
     public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
         Graphics2D g2d = canvas.createGraphics();
-        g2d.drawImage(pattern, x-size/2, y-size/2, this);
+        g2d.drawImage(pattern, x-size/2, y-size/2, null);
     }
 
     public ChangeListener getChangeListener() {
@@ -103,16 +101,11 @@ public class Pencil implements DrawingTool, ImageObserver {
         g2d.setColor(color);
         g2d.fillRect(0, 0, shape.getWidth(), shape.getHeight());
         g2d.setComposite(new ANDComposite());
-        g2d.drawImage(shape, 0, 0, this);
+        g2d.drawImage(shape, 0, 0, null);
         g2d = pattern.createGraphics();
-        g2d.drawImage(colorShape, 0, 0, size, size, this);
+        g2d.drawImage(colorShape, 0, 0, size, size, null);
         
         fireChangeEvent();
-    }
-
-    @Override
-    public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-        return true;
     }
     
     private void fireChangeEvent() {

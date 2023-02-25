@@ -64,7 +64,11 @@ public class ColoringPage extends JComponent {
         else
             setName("Unnamed");
         
-        refImage = ref;
+        refImage = new BufferedImage(ref.getWidth(), ref.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = refImage.createGraphics();
+        g2d.drawImage(ref, 0, 0, null);
+        g2d.dispose();
+        
         canvasImage = new BufferedImage(refImage.getWidth(), refImage.getHeight(), refImage.getType());
         compImage = new BufferedImage(refImage.getWidth(), refImage.getHeight(), refImage.getType());
         clear();

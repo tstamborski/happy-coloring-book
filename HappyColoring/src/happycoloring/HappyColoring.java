@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -38,6 +39,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private HappyShortcutToolBar shortcutToolbar;
     private ColoringPageList pagesList;
     
+    private Color currentColor;
     private DrawingTool currentDrawingTool;
     private BufferedImage circlePattern, squarePattern, diamondPattern, starPattern, softPattern;
     private Pencil pencil, softbrush;
@@ -59,18 +61,19 @@ public class HappyColoring extends JFrame implements HappyI18n {
         loadDialog.loadi18n(rb);
         paletteToolbar.loadi18n(rb);
         shortcutToolbar.loadi18n(rb);
+        status.loadi18n(rb);
     }
     
     public HappyColoring() {
+        createDrawingTools();
+        pagesList = new ColoringPageList();
+        
         createDialogs();
         createMenu();
         createToolbars();
         createStatusbar();
         scrollPane = new HappyScrollPane();
         add(scrollPane);
-        
-        pagesList = new ColoringPageList();
-        createDrawingTools();
         
         setIconImage(new ImageIcon(getClass().getResource("icons/coloring64.png")).getImage());
         setSize(800, 600);
@@ -83,6 +86,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     protected void setCurrentColor(Color c) {
+        currentColor = c;
         currentDrawingTool.setColor(c);
     }
     
@@ -109,10 +113,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
         
         menu.getAboutItem().addActionListener((ae)->{aboutDialog.setVisible(true);});
         
+        menu.getClearAllItem().addActionListener(ae -> pagesList.forEach(cp -> cp.clear()));
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
-        menu.getSizeItems().get(3).setSelected(true);
+        //menu.getSizeItems().get(3).setSelected(true);
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getDoubleValue())));
-        menu.getZoomItems().get(1).setSelected(true);
+        //menu.getZoomItems().get(1).setSelected(true);
         
         menu.getColorItems().forEach(cb -> cb.addActionListener(ae->setCurrentColor(cb.getColor())));
         menu.getCustomColorItem().addActionListener((ae)->setCustomColor());
@@ -127,6 +132,8 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getStarRubberItem().addActionListener((ae)->{rubber.setShape(starPattern); setCurrentTool(rubber);});
         menu.getSoftbrushItem().addActionListener((ae)->setCurrentTool(softbrush));
         menu.getBucketItem().addActionListener(ae -> setCurrentTool(bucket));
+        
+        menu.getClearItem().addActionListener(ae -> pagesList.getCurrent().clear());
         
         menu.getNextItem().addActionListener(ae->nextPage());
         menu.getPreviousItem().addActionListener(ae->previousPage());
@@ -165,6 +172,8 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     private void createDrawingTools() {
+        currentColor = HappyPalette.getInstance().get(0).getColor();
+        
         try {
             circlePattern = ImageIO.read(getClass().getResourceAsStream("patterns/circle16.png"));
             squarePattern = ImageIO.read(getClass().getResourceAsStream("patterns/square16.png"));
@@ -175,12 +184,13 @@ public class HappyColoring extends JFrame implements HappyI18n {
             Logger.getLogger(HappyColoring.class.getName()).log(Level.SEVERE, ex.getMessage(), this);
         }
         
-        pencil = new Pencil(circlePattern, HappyPalette.getInstance().get(0).getColor(), DrawingTool.SIZE_BIG);
+        pencil = new Pencil(circlePattern, currentColor, DrawingTool.SIZE_BIG);
         rubber = new Rubber(circlePattern, DrawingTool.SIZE_BIG);
-        softbrush = new Pencil(softPattern, HappyPalette.getInstance().get(0).getColor(), DrawingTool.SIZE_BIG);
-        bucket = new PaintBucket(HappyPalette.getInstance().get(0).getColor());
+        softbrush = new Pencil(softPattern, currentColor, DrawingTool.SIZE_BIG);
+        bucket = new PaintBucket(currentColor);
         
         pencil.setChangeListener(ce -> status.setDisplayedColor(pencil.getColor()));
+        rubber.setChangeListener(ce -> status.setDisplayedColor(rubber.getColor()));
         softbrush.setChangeListener(ce -> status.setDisplayedColor(softbrush.getColor()));
         bucket.setChangeListener(ce -> status.setDisplayedColor(bucket.getColor()));
         
@@ -264,6 +274,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
                 status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
             }
         }));
+        pagesList.forEach(cp -> cp.addMouseWheelListener((MouseWheelEvent e) -> {
+            if (e.getWheelRotation() > 0)
+                setCurrentColor(ColorUtil.darker(currentColor, 0x10));
+            else if (e.getWheelRotation() < 0)
+                setCurrentColor(ColorUtil.brighter(currentColor, 0x10));
+        }));
         
         setCurrentTool(currentDrawingTool);
         setCurrentPage(pagesList.getCurrent());
@@ -284,6 +300,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     protected void setCurrentTool(DrawingTool tool) {
+        tool.setColor(currentColor);
         currentDrawingTool = tool;
         pagesList.forEach(i -> i.setDrawingTool(tool));
         updateGUI();
