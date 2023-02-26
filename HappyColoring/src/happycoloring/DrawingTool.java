@@ -28,12 +28,12 @@ package happycoloring;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public interface DrawingTool extends Drawable {
-    public static int SIZE_TINY = 2;
-    public static int SIZE_SMALL = 4;
-    public static int SIZE_MEDIUM = 8;
-    public static int SIZE_BIG = 16;
-    public static int SIZE_LARGE = 32;
-    public static int SIZE_HUGE = 64;
+    public static final int SIZE_TINY = 2;
+    public static final int SIZE_SMALL = 4;
+    public static final int SIZE_MEDIUM = 8;
+    public static final int SIZE_BIG = 16;
+    public static final int SIZE_LARGE = 32;
+    public static final int SIZE_HUGE = 64;
     
     public void setSize(int size);
     public int getSize();

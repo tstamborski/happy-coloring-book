@@ -3,8 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyStatusBar.java</file>
-            <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyMenuBar.java</file>
+            <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/ColoringUndoRedo.java</file>
+            <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/i18n/i18n.properties</file>
+            <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/ColoringPage.java</file>
             <file>file:/C:/Users/Tobiasz/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyColoring.java</file>
         </group>
     </open-files>

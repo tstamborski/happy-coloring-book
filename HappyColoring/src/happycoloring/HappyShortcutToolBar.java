@@ -56,12 +56,18 @@ public class HappyShortcutToolBar extends JToolBar implements HappyI18n {
         bucketButton = new JToggleButton(new ImageIcon(getClass().getResource("icons/paint-bucket16.png")));
         
         sizeButtons = new ArrayList();
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xs16.png")), 2));
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/s16.png")), 4));
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/m16.png")), 8));
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/l16.png")), 16));
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xl16.png")), 32));
-        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xxl16.png")), 64));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xs16.png")),
+                DrawingTool.SIZE_TINY));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/s16.png")),
+                DrawingTool.SIZE_SMALL));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/m16.png")),
+                DrawingTool.SIZE_MEDIUM));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/l16.png")),
+                DrawingTool.SIZE_BIG));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xl16.png")),
+                DrawingTool.SIZE_LARGE));
+        sizeButtons.add(new NumberToggleButton(new ImageIcon(getClass().getResource("icons/xxl16.png")),
+                DrawingTool.SIZE_HUGE));
         
         toolGroup = new ButtonGroup();
         toolGroup.add(pencilButton);

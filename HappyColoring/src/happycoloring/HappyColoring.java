@@ -44,6 +44,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private BufferedImage circlePattern, squarePattern, diamondPattern, starPattern, softPattern;
     private Pencil pencil, softbrush;
     private Rubber rubber;
+    private Spray spray;
     private PaintBucket bucket;
     
     private ResourceBundle i18n;
@@ -115,9 +116,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         
         menu.getClearAllItem().addActionListener(ae -> pagesList.forEach(cp -> cp.clear()));
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
-        //menu.getSizeItems().get(3).setSelected(true);
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getDoubleValue())));
-        //menu.getZoomItems().get(1).setSelected(true);
         
         menu.getColorItems().forEach(cb -> cb.addActionListener(ae->setCurrentColor(cb.getColor())));
         menu.getCustomColorItem().addActionListener((ae)->setCustomColor());
@@ -130,9 +129,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getSquareRubberItem().addActionListener((ae)->{rubber.setShape(squarePattern); setCurrentTool(rubber);});
         menu.getDiamondRubberItem().addActionListener((ae)->{rubber.setShape(diamondPattern); setCurrentTool(rubber);});
         menu.getStarRubberItem().addActionListener((ae)->{rubber.setShape(starPattern); setCurrentTool(rubber);});
-        menu.getSoftbrushItem().addActionListener((ae)->setCurrentTool(softbrush));
+        menu.getSprayItem().addActionListener(ae -> setCurrentTool(spray));
+        menu.getSoftbrushItem().addActionListener(ae ->setCurrentTool(softbrush));
         menu.getBucketItem().addActionListener(ae -> setCurrentTool(bucket));
         
+        menu.getUndoItem().addActionListener(ae -> undo());
+        menu.getRedoItem().addActionListener(ae -> redo());
         menu.getClearItem().addActionListener(ae -> pagesList.getCurrent().clear());
         
         menu.getNextItem().addActionListener(ae->nextPage());
@@ -155,9 +157,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
         shortcutToolbar = new HappyShortcutToolBar();
         shortcutToolbar.getNextButton().addActionListener(ae -> nextPage());
         shortcutToolbar.getPreviousButton().addActionListener(ae -> previousPage());
+        shortcutToolbar.getUndoButton().addActionListener(ae -> undo());
+        shortcutToolbar.getRedoButton().addActionListener(ae -> redo());
         shortcutToolbar.getPencilButton().addActionListener(ae -> setCurrentTool(pencil));
         shortcutToolbar.getRubberButton().addActionListener(ae -> setCurrentTool(rubber));
-        shortcutToolbar.getSprayButton().addActionListener(ae -> setCurrentTool(null));
+        shortcutToolbar.getSprayButton().addActionListener(ae -> setCurrentTool(spray));
         shortcutToolbar.getSoftbrushButton().addActionListener(ae -> setCurrentTool(softbrush));
         shortcutToolbar.getBucketButton().addActionListener(ae -> setCurrentTool(bucket));
         shortcutToolbar.getSizeButtons().forEach(b -> b.addActionListener(ae -> setCurrentToolSize(b.getIntValue())));
@@ -186,11 +190,13 @@ public class HappyColoring extends JFrame implements HappyI18n {
         
         pencil = new Pencil(circlePattern, currentColor, DrawingTool.SIZE_BIG);
         rubber = new Rubber(circlePattern, DrawingTool.SIZE_BIG);
+        spray = new Spray(currentColor, DrawingTool.SIZE_BIG);
         softbrush = new Pencil(softPattern, currentColor, DrawingTool.SIZE_BIG);
         bucket = new PaintBucket(currentColor);
         
         pencil.setChangeListener(ce -> status.setDisplayedColor(pencil.getColor()));
         rubber.setChangeListener(ce -> status.setDisplayedColor(rubber.getColor()));
+        spray.setChangeListener(ce -> status.setDisplayedColor(spray.getColor()));
         softbrush.setChangeListener(ce -> status.setDisplayedColor(softbrush.getColor()));
         bucket.setChangeListener(ce -> status.setDisplayedColor(bucket.getColor()));
         
@@ -210,11 +216,6 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getZoomMenu().setEnabled(isFilesOpened);
         menu.getClearAllItem().setEnabled(isFilesOpened);
         menu.getClearItem().setEnabled(isFilesOpened);
-        
-        menu.getUndoItem().setEnabled(false);
-        shortcutToolbar.getUndoButton().setEnabled(false);
-        menu.getRedoItem().setEnabled(false);
-        shortcutToolbar.getRedoButton().setEnabled(false);
         
         menu.getNextItem().setEnabled(pagesList.isNext());
         shortcutToolbar.getNextButton().setEnabled(pagesList.isNext());
@@ -249,6 +250,17 @@ public class HappyColoring extends JFrame implements HappyI18n {
         if (isFilesOpened) {
             menu.getZoomItems().forEach(i -> i.setSelected(i.getDoubleValue() == pagesList.getCurrent().getZoom()));
             status.setDisplayedInfo(pagesList);
+            
+            menu.getUndoItem().setEnabled(pagesList.getCurrent().isUndo());
+            shortcutToolbar.getUndoButton().setEnabled(pagesList.getCurrent().isUndo());
+            menu.getRedoItem().setEnabled(pagesList.getCurrent().isRedo());
+            shortcutToolbar.getRedoButton().setEnabled(pagesList.getCurrent().isRedo());
+        }
+        else {
+            menu.getUndoItem().setEnabled(false);
+            shortcutToolbar.getUndoButton().setEnabled(false);
+            menu.getRedoItem().setEnabled(false);
+            shortcutToolbar.getRedoButton().setEnabled(false);
         }
     }
 
@@ -280,9 +292,22 @@ public class HappyColoring extends JFrame implements HappyI18n {
             else if (e.getWheelRotation() < 0)
                 setCurrentColor(ColorUtil.brighter(currentColor, 0x10));
         }));
+        pagesList.forEach(cp -> cp.setActionListener(ae -> updateGUI()));
         
         setCurrentTool(currentDrawingTool);
         setCurrentPage(pagesList.getCurrent());
+    }
+    
+    protected void undo() {
+        if (!pagesList.isEmpty())
+            pagesList.getCurrent().undo();
+        updateGUI();
+    }
+    
+    protected void redo() {
+        if (!pagesList.isEmpty())
+            pagesList.getCurrent().redo();
+        updateGUI();
     }
     
     protected void nextPage() {
