@@ -10,7 +10,6 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -34,12 +33,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private HappyStatusBar status;
     private AboutDialog aboutDialog;
     private HappyLoadDialog loadDialog;
+    private HappySaveDialog saveAsDialog;
     private final HappyScrollPane scrollPane;
     private HappyPaletteToolBar paletteToolbar;
     private HappyShortcutToolBar shortcutToolbar;
     private ColoringPageList pagesList;
     
-    private Color currentColor;
     private DrawingTool currentDrawingTool;
     private BufferedImage circlePattern, squarePattern, diamondPattern, starPattern, softPattern;
     private Pencil pencil, softbrush;
@@ -87,7 +86,6 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     protected void setCurrentColor(Color c) {
-        currentColor = c;
         currentDrawingTool.setColor(c);
     }
     
@@ -107,6 +105,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         }
         
         loadDialog = new HappyLoadDialog(new File(System.getProperty("user.home")));
+        saveAsDialog = new HappySaveDialog(new File(System.getProperty("user.home")));
     }
     
     private void createMenu() {
@@ -140,6 +139,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getNextItem().addActionListener(ae->nextPage());
         menu.getPreviousItem().addActionListener(ae->previousPage());
         menu.getLoadItem().addActionListener((ae)->load());
+        menu.getSaveAsItem().addActionListener(ae -> saveAsImage());
         menu.getExitItem().addActionListener((ae)->{dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));});
         
         setJMenuBar(menu);
@@ -176,7 +176,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     private void createDrawingTools() {
-        currentColor = HappyPalette.getInstance().get(0).getColor();
+        Color color = HappyPalette.getInstance().get(0).getColor();
         
         try {
             circlePattern = ImageIO.read(getClass().getResourceAsStream("patterns/circle16.png"));
@@ -188,11 +188,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
             Logger.getLogger(HappyColoring.class.getName()).log(Level.SEVERE, ex.getMessage(), this);
         }
         
-        pencil = new Pencil(circlePattern, currentColor, DrawingTool.SIZE_BIG);
+        pencil = new Pencil(circlePattern, color, DrawingTool.SIZE_BIG);
         rubber = new Rubber(circlePattern, DrawingTool.SIZE_BIG);
-        spray = new Spray(currentColor, DrawingTool.SIZE_BIG);
-        softbrush = new Pencil(softPattern, currentColor, DrawingTool.SIZE_BIG);
-        bucket = new PaintBucket(currentColor);
+        spray = new Spray(color, DrawingTool.SIZE_BIG);
+        softbrush = new Pencil(softPattern, color, DrawingTool.SIZE_BIG);
+        bucket = new PaintBucket(color);
         
         pencil.setChangeListener(ce -> status.setDisplayedColor(pencil.getColor()));
         rubber.setChangeListener(ce -> status.setDisplayedColor(rubber.getColor()));
@@ -264,6 +264,35 @@ public class HappyColoring extends JFrame implements HappyI18n {
         }
     }
 
+    protected void saveAsImage() {
+        if (saveAsDialog.showSaveDialog(this) == HappyLoadDialog.CANCEL_OPTION)
+            return;
+        
+        try {
+            switch (saveAsDialog.getFileType()) {
+                case "bmp":
+                    ImageIO.write(pagesList.getCurrent().toBufferedImage(BufferedImage.TYPE_INT_BGR), 
+                            "bmp", saveAsDialog.getHappyFile());
+                    break;
+                case "png":
+                    ImageIO.write(pagesList.getCurrent().toBufferedImage(BufferedImage.TYPE_INT_ARGB), 
+                            "png", saveAsDialog.getHappyFile());
+                    break;
+                case "jpg":
+                    ImageIO.write(pagesList.getCurrent().toBufferedImage(BufferedImage.TYPE_INT_RGB), 
+                            "jpg", saveAsDialog.getHappyFile());
+                    break;
+                default:
+                    ImageIO.write(pagesList.getCurrent().toBufferedImage(BufferedImage.TYPE_INT_ARGB), 
+                            "png", saveAsDialog.getHappyFile());
+                    break;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(HappyColoring.class.getName()).log(Level.WARNING, ex.getMessage(), this);
+            Util.showError(this, ex.getMessage());
+        }
+    }
+    
     protected void load() {
         if (loadDialog.showOpenDialog(this) == HappyLoadDialog.CANCEL_OPTION)
             return;
@@ -272,7 +301,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
             pagesList = ColoringPageList.fromFileArray(loadDialog.getSelectedFiles());
         } catch (IOException ex) {
             Logger.getLogger(HappyColoring.class.getName()).log(Level.WARNING, ex.getMessage(), this);
-            Util.showError(this, ex.getLocalizedMessage());
+            Util.showError(this, ex.getMessage());
         }
         
         pagesList.forEach(cp -> cp.addMouseMotionListener(new MouseMotionListener() {
@@ -286,12 +315,6 @@ public class HappyColoring extends JFrame implements HappyI18n {
                 status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
             }
         }));
-        pagesList.forEach(cp -> cp.addMouseWheelListener((MouseWheelEvent e) -> {
-            if (e.getWheelRotation() > 0)
-                setCurrentColor(ColorUtil.darker(currentColor, 0x10));
-            else if (e.getWheelRotation() < 0)
-                setCurrentColor(ColorUtil.brighter(currentColor, 0x10));
-        }));
         pagesList.forEach(cp -> cp.setActionListener(ae -> updateGUI()));
         
         setCurrentTool(currentDrawingTool);
@@ -301,13 +324,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
     protected void undo() {
         if (!pagesList.isEmpty())
             pagesList.getCurrent().undo();
-        updateGUI();
     }
     
     protected void redo() {
         if (!pagesList.isEmpty())
             pagesList.getCurrent().redo();
-        updateGUI();
     }
     
     protected void nextPage() {
@@ -319,13 +340,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     protected void setCurrentPage(ColoringPage page) {
-        if (page != null)
-            scrollPane.setViewportView(page);
+        scrollPane.setViewportView(page);
         updateGUI();
     }
     
     protected void setCurrentTool(DrawingTool tool) {
-        tool.setColor(currentColor);
+        tool.setColor(currentDrawingTool.getColor());
         currentDrawingTool = tool;
         pagesList.forEach(i -> i.setDrawingTool(tool));
         updateGUI();

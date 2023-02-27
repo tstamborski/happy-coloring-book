@@ -23,64 +23,46 @@
  */
 package happycoloring;
 
-import java.awt.Color;
+import java.io.File;
+import java.util.ResourceBundle;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class ColorUtil {
-    public static Color darker(Color c, int step) {
-        int r, g, b, a;
+public class HappySaveDialog extends JFileChooser implements HappyI18n {
+    private final FileNameExtensionFilter pngFilter, jpgFilter, bmpFilter;
+    
+    public HappySaveDialog(File currentDirectory) {
+        super(currentDirectory);
         
-        a = c.getAlpha();
-        r = c.getRed();
-        g = c.getGreen();
-        b = c.getBlue();
+        pngFilter = new FileNameExtensionFilter("PNG Image", "png");
+        jpgFilter = new FileNameExtensionFilter("JPG Image", "jpg", "jpeg");
+        bmpFilter = new FileNameExtensionFilter("BMP Image", "bmp");
         
-        r -= step;
-        g -= step;
-        b -= step;
-        if (r < 0)
-            r = 0;
-        if (g < 0)
-            g = 0;
-        if (b < 0)
-            b = 0;
-        if (r > 0xff)
-            r = 0xff;
-        if (g > 0xff)
-            g = 0xff;
-        if (b > 0xff)
-            b = 0xff;
+        addChoosableFileFilter(bmpFilter);
+        addChoosableFileFilter(pngFilter);
+        addChoosableFileFilter(jpgFilter);
+        setFileFilter(jpgFilter);
         
-        return new Color(r, g, b, a);
+        setMultiSelectionEnabled(false);
+    }
+
+    public String getFileType() {
+        return ((FileNameExtensionFilter)getFileFilter()).getExtensions()[0];
     }
     
-    public static Color brighter(Color c, int step) {
-        int r, g, b, a;
-        
-        a = c.getAlpha();
-        r = c.getRed();
-        g = c.getGreen();
-        b = c.getBlue();
-        
-        r += step;
-        g += step;
-        b += step;
-        if (r < 0)
-            r = 0;
-        if (g < 0)
-            g = 0;
-        if (b < 0)
-            b = 0;
-        if (r > 0xff)
-            r = 0xff;
-        if (g > 0xff)
-            g = 0xff;
-        if (b > 0xff)
-            b = 0xff;
-        
-        return new Color(r, g, b, a);
+    public File getHappyFile() {
+        if (Util.hasExtension(getSelectedFile(), ((FileNameExtensionFilter)getFileFilter()).getExtensions()))
+            return getSelectedFile();
+        else
+            return new File(getSelectedFile().getPath() + "." + getFileType());
+    }
+
+    @Override
+    public void loadi18n(ResourceBundle rb) {
+        //TODO
     }
 }

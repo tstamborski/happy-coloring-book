@@ -30,6 +30,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JComponent;
 
@@ -85,12 +86,14 @@ public class ColoringPage extends JComponent {
         if (history.isUndo())
             canvasImage = history.undo();
         repaint();
+        fireActionEvent();
     }
     
     public void redo() {
         if (history.isRedo())
             canvasImage = history.redo();
         repaint();
+        fireActionEvent();
     }
     
     public ColoringPage(BufferedImage ref, String name) {
@@ -112,9 +115,19 @@ public class ColoringPage extends JComponent {
         
         setPreferredSize(new Dimension(refImage.getWidth(), refImage.getHeight()));
         zoom = 1.0;
-        enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK);
+        enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_WHEEL_EVENT_MASK);
     }
 
+    public BufferedImage toBufferedImage(int type) {
+        BufferedImage img = new BufferedImage(compImage.getWidth(), compImage.getHeight(), type);
+        Graphics2D g2d = img.createGraphics();
+        
+        g2d.drawImage(compImage, 0, 0, this);
+        g2d.dispose();
+        
+        return img;
+    }
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -129,11 +142,22 @@ public class ColoringPage extends JComponent {
     }
 
     @Override
+    protected void processMouseWheelEvent(MouseWheelEvent e) {
+        super.processMouseWheelEvent(e);
+        
+        if (e.getWheelRotation() != 0)
+            drawingTool.setColor(ColorUtil.darker(drawingTool.getColor(), 0x10 * e.getWheelRotation()));
+    }
+
+    @Override
     protected void processMouseMotionEvent(MouseEvent e) {
         super.processMouseMotionEvent(e);
         
         if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0)
             draw(e.getX(), e.getY());
+        
+        if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0)
+            drawingTool.setColor(new Color(canvasImage.getRGB((int)(e.getX()/zoom), (int)(e.getY()/zoom))));
     }
     
     @Override
@@ -145,6 +169,10 @@ public class ColoringPage extends JComponent {
                 draw(e.getX(), e.getY());
             else if (e.getID() == MouseEvent.MOUSE_RELEASED)
                 noteAction();
+        
+        if (e.getButton() == MouseEvent.BUTTON3)
+            if (e.getID() == MouseEvent.MOUSE_PRESSED)
+                drawingTool.setColor(new Color(canvasImage.getRGB((int)(e.getX()/zoom), (int)(e.getY()/zoom))));
     }
     
     public final void clear() {

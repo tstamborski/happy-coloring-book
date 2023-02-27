@@ -44,8 +44,8 @@ public class HappyLoadDialog extends JFileChooser implements HappyI18n {
         bmpFilter = new FileNameExtensionFilter("BMP Images", "bmp");
         
         addChoosableFileFilter(bmpFilter);
-        addChoosableFileFilter(jpgFilter);
         addChoosableFileFilter(pngFilter);
+        addChoosableFileFilter(jpgFilter);
         addChoosableFileFilter(imgFilter);
         setFileFilter(imgFilter);
         
