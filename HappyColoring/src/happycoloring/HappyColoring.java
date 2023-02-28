@@ -22,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -46,6 +47,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private Spray spray;
     private PaintBucket bucket;
     
+    private HappySettings settings;
     private ResourceBundle i18n;
     
     private void loadi18n(Locale locale) {
@@ -67,6 +69,13 @@ public class HappyColoring extends JFrame implements HappyI18n {
     public HappyColoring() {
         createDrawingTools();
         pagesList = new ColoringPageList();
+        try {
+            settings = new HappySettings();
+        } catch (IOException ex) {
+            Logger.getLogger(HappyColoring.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+            Util.showError(null, "Cannot access settings directory!");
+            System.exit(-1);
+        }
         
         createDialogs();
         createMenu();
@@ -84,6 +93,14 @@ public class HappyColoring extends JFrame implements HappyI18n {
         loadi18n(Locale.getDefault());
         updateGUI();
     }
+
+    @Override
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        
+        if (e.getID() == WindowEvent.WINDOW_CLOSING)
+            settings.save(pagesList);
+    }
     
     protected void setCurrentColor(Color c) {
         currentDrawingTool.setColor(c);
@@ -93,6 +110,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
         Color c = JColorChooser.showDialog(this, i18n.getString("ColorChooserDialog"), currentDrawingTool.getColor());
         if (c != null)
             setCurrentColor(c);
+    }
+    
+    protected void clearAll() {
+        if (JOptionPane.showConfirmDialog(this, i18n.getString("ClearAllMessage"), i18n.getString("Question"), 
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
+            pagesList.forEach(cp -> cp.clear());
     }
     
     private void createDialogs() {
@@ -113,7 +136,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         
         menu.getAboutItem().addActionListener((ae)->{aboutDialog.setVisible(true);});
         
-        menu.getClearAllItem().addActionListener(ae -> pagesList.forEach(cp -> cp.clear()));
+        menu.getClearAllItem().addActionListener(ae -> clearAll());
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getDoubleValue())));
         
@@ -294,6 +317,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     }
     
     protected void load() {
+        settings.save(pagesList);
         if (loadDialog.showOpenDialog(this) == HappyLoadDialog.CANCEL_OPTION)
             return;
         
@@ -317,6 +341,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         }));
         pagesList.forEach(cp -> cp.setActionListener(ae -> updateGUI()));
         
+        settings.load(pagesList);
         setCurrentTool(currentDrawingTool);
         setCurrentPage(pagesList.getCurrent());
     }

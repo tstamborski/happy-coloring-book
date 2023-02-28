@@ -56,6 +56,10 @@ public class ColoringPage extends JComponent {
         this.actionListener = actionListener;
     }
 
+    public BufferedImage getCanvasImage() {
+        return canvasImage;
+    }
+
     public Drawable getDrawingTool() {
         return drawingTool;
     }
