@@ -100,6 +100,11 @@ public class ColoringPage extends JComponent {
         fireActionEvent();
     }
     
+    public void clearHistory() {
+        history.clear();
+        noteAction();
+    }
+    
     public ColoringPage(BufferedImage ref, String name) {
         if (name != null)
             setName(name);

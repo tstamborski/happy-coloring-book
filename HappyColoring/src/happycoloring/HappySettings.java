@@ -91,6 +91,8 @@ public class HappySettings {
             
             Graphics2D g2d = page.getCanvasImage().createGraphics();
             g2d.drawImage(img, 0, 0, null);
+            
+            page.clearHistory();
         });
     }
     

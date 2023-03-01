@@ -82,6 +82,11 @@ public class ColoringUndoRedo {
         index = history.size()-1;
     }
     
+    public void clear() {
+        history.clear();
+        index = -1;
+    }
+    
     private BufferedImage deepCopy(BufferedImage bi) {
         ColorModel cm = bi.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();

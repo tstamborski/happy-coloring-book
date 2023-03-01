@@ -96,10 +96,10 @@ public class HappyColoring extends JFrame implements HappyI18n {
 
     @Override
     protected void processWindowEvent(WindowEvent e) {
-        super.processWindowEvent(e);
-        
         if (e.getID() == WindowEvent.WINDOW_CLOSING)
             settings.save(pagesList);
+        
+        super.processWindowEvent(e);
     }
     
     protected void setCurrentColor(Color c) {
