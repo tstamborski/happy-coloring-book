@@ -61,9 +61,12 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.loadi18n(rb);
         aboutDialog.loadi18n(rb);
         loadDialog.loadi18n(rb);
+        saveAsDialog.loadi18n(rb);
         paletteToolbar.loadi18n(rb);
         shortcutToolbar.loadi18n(rb);
         status.loadi18n(rb);
+        
+        updateGUI();
     }
     
     public HappyColoring() {
@@ -139,6 +142,8 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getClearAllItem().addActionListener(ae -> clearAll());
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getDoubleValue())));
+        menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl")));
+        menu.getEnglishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("en")));
         
         menu.getColorItems().forEach(cb -> cb.addActionListener(ae->setCurrentColor(cb.getColor())));
         menu.getCustomColorItem().addActionListener((ae)->setCustomColor());

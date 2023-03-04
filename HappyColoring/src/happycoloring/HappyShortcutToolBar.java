@@ -137,8 +137,24 @@ public class HappyShortcutToolBar extends JToolBar implements HappyI18n {
 
     @Override
     public void loadi18n(ResourceBundle rb) {
-        //TODO
+        nextButton.setToolTipText(rb.getString("NextButtonToolTip"));
+        previousButton.setToolTipText(rb.getString("PreviousButtonToolTip"));
+        
+        undoButton.setToolTipText(rb.getString("UndoButtonToolTip"));
+        redoButton.setToolTipText(rb.getString("RedoButtonToolTip"));
+        
+        pencilButton.setToolTipText(rb.getString("PencilButtonToolTip"));
+        rubberButton.setToolTipText(rb.getString("RubberButtonToolTip"));
+        sprayButton.setToolTipText(rb.getString("SprayButtonToolTip"));
+        softbrushButton.setToolTipText(rb.getString("SoftBrushButtonToolTip"));
+        bucketButton.setToolTipText(rb.getString("BucketButtonToolTip"));
+        
+        sizeButtons.get(0).setToolTipText(rb.getString("TinySizeButtonToolTip"));
+        sizeButtons.get(1).setToolTipText(rb.getString("SmallSizeButtonToolTip"));
+        sizeButtons.get(2).setToolTipText(rb.getString("MediumSizeButtonToolTip"));
+        sizeButtons.get(3).setToolTipText(rb.getString("BigSizeButtonToolTip"));
+        sizeButtons.get(4).setToolTipText(rb.getString("LargeSizeButtonToolTip"));
+        sizeButtons.get(5).setToolTipText(rb.getString("HugeSizeButtonToolTip"));
     }
-    
     
 }

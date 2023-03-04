@@ -58,6 +58,11 @@ public class PaintBucket implements DrawingTool {
 
     @Override
     public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
+        if (x < 0 || x >= canvas.getWidth())
+            return;
+        if (y < 0 || y >= canvas.getHeight())
+            return;
+        
         this.canvas = canvas;
         this.reference = ref;
         baseRGB = canvas.getRGB(x, y);
@@ -66,7 +71,6 @@ public class PaintBucket implements DrawingTool {
         else
             dstRGB = color.getRGB() | 0xff000000;
             
-        
         queue.clear();
         queue.add(new Coordinate(x,y));
         

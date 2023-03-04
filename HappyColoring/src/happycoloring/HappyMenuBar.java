@@ -110,10 +110,14 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         
         paletteMenu.setText(rb.getString("PaletteMenu"));
         paletteMenu.setMnemonic(rb.getString("PaletteMenuMnemonic").charAt(0));
-        for (int i = 0; i < colorItems.size(); i++)
+        for (int i = 0; i < colorItems.size(); i++) {
             colorItems.get(i).setText(rb.getString(HappyPalette.getInstance().get(i).getName()));
+            colorItems.get(i).setMnemonic(
+                    rb.getString(HappyPalette.getInstance().get(i).getName()+"Mnemonic").charAt(0)
+            );
+        }
         customColorItem.setText(rb.getString("CustomColorMenuItem"));
-        customColorItem.setMnemonic(rb.getString("CustomMenuItemMnemonic").charAt(0));
+        customColorItem.setMnemonic(rb.getString("CustomColorMenuItemMnemonic").charAt(0));
         
         optionsMenu.setText(rb.getString("OptionsMenu"));
         optionsMenu.setMnemonic(rb.getString("OptionsMenuMnemonic").charAt(0));
@@ -126,9 +130,27 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         zoomMenu.setText(rb.getString("ZoomMenu"));
         zoomMenu.setMnemonic(rb.getString("ZoomMenuMnemonic").charAt(0));
         zoomItems.forEach(i -> i.setMnemonic(i.getText().charAt(0)));
+        sizeMenu.setText(rb.getString("SizeMenu"));
+        sizeMenu.setMnemonic(rb.getString("SizeMenuMnemonic").charAt(0));
+        sizeItems.get(0).setText(rb.getString("TinySizeMenuItem"));
+        sizeItems.get(0).setMnemonic(rb.getString("TinySizeMenuItemMnemonic").charAt(0));
+        sizeItems.get(1).setText(rb.getString("SmallSizeMenuItem"));
+        sizeItems.get(1).setMnemonic(rb.getString("SmallSizeMenuItemMnemonic").charAt(0));
+        sizeItems.get(2).setText(rb.getString("MediumSizeMenuItem"));
+        sizeItems.get(2).setMnemonic(rb.getString("MediumSizeMenuItemMnemonic").charAt(0));
+        sizeItems.get(3).setText(rb.getString("BigSizeMenuItem"));
+        sizeItems.get(3).setMnemonic(rb.getString("BigSizeMenuItemMnemonic").charAt(0));
+        sizeItems.get(4).setText(rb.getString("LargeSizeMenuItem"));
+        sizeItems.get(4).setMnemonic(rb.getString("LargeSizeMenuItemMnemonic").charAt(0));
+        sizeItems.get(5).setText(rb.getString("HugeSizeMenuItem"));
+        sizeItems.get(5).setMnemonic(rb.getString("HugeSizeMenuItemMnemonic").charAt(0));
+        clearAllItem.setText(rb.getString("ClearAllMenuItem"));
+        clearAllItem.setMnemonic(rb.getString("ClearAllMenuItemMnemonic").charAt(0));
         
         helpMenu.setText(rb.getString("HelpMenu"));
+        helpMenu.setMnemonic(rb.getString("HelpMenuMnemonic").charAt(0));
         aboutItem.setText(rb.getString("AboutMenuItem"));
+        aboutItem.setMnemonic(rb.getString("AboutMenuItemMnemonic").charAt(0));
         
     }
     

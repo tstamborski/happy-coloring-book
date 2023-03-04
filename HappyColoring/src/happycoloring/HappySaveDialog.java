@@ -63,6 +63,6 @@ public class HappySaveDialog extends JFileChooser implements HappyI18n {
 
     @Override
     public void loadi18n(ResourceBundle rb) {
-        //TODO
+        setDialogTitle(rb.getString("SaveAsDialog"));
     }
 }

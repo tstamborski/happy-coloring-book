@@ -63,6 +63,10 @@ public class HappyPaletteToolBar extends JToolBar implements HappyI18n {
 
     @Override
     public void loadi18n(ResourceBundle rb) {
+        for (int i = 0; i < colorButtons.size(); i++)
+            colorButtons.get(i).setToolTipText(
+                    rb.getString(HappyPalette.getInstance().get(i).getName())
+            );
         paletteButton.setToolTipText(rb.getString("CustomColorToolTip"));
     }
 }

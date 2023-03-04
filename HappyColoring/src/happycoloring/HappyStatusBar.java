@@ -80,6 +80,6 @@ public class HappyStatusBar extends JPanel implements HappyI18n{
 
     @Override
     public void loadi18n(ResourceBundle rb) {
-        
+        pageFormatString = rb.getString("PageFormatString");
     }
 }
