@@ -126,6 +126,9 @@ public class AboutDialog extends JDialog {
         setApplicationVersion(i18n.getString("ApplicationVersion"));
         setApplicationCopyright(i18n.getString("ApplicationCopyright"));
         setApplicationExtraInfo(i18n.getString("ApplicationExtraInfo"));
+        
+        revalidate();
+        repaint();
     }
     
     protected JTabbedPane getJTabbedPane() {
