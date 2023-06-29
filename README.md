@@ -1,5 +1,5 @@
-# Happy Coloring Book
-✏️🎨 Coloring book application. Take your stress off by coloring images. 😃
+# ![](https://github.com/tstamborski/happy-coloring-book/blob/main/HappyColoring/src/happycoloring/icons/coloring64.png) Happy Coloring Book
+✏️🎨 Coloring book application for every operating system where Java SE is avaible. Take your stress off by coloring images. 😃
 
 ## Description
 Similiar application like in my xmas-colorbook repository - except designed to use with your own images. Downloads are [*here*](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.5/HappyColoring.jar).
