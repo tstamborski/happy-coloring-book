@@ -1,8 +1,11 @@
 # ![](https://github.com/tstamborski/happy-coloring-book/blob/main/HappyColoring/src/happycoloring/icons/coloring64.png) Happy Coloring Book
-✏️🎨 Coloring book application for every operating system where Java SE is avaible. Take your stress off by coloring images. 😃
+✏️🎨 Coloring book application for every operating system where Java SE is avaible!
 
 ## Description
-Similiar application like in my xmas-colorbook repository - except designed to use with your own images. Downloads are [*here*](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.5/HappyColoring.jar).
+Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are [**here**](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.5/HappyColoring.jar).
+
+If you consider this application as somewhat interesting for you, please consider giving a star to this repository - other people will be able to find it
+easier and I will have a stronger reason to continue work on it. 🙂
 
 ## Screenshots
 ![](screenshot.jpg)
@@ -25,4 +28,4 @@ in separate directories). Maybe it was a bad idea to make such autosave feature,
 simply look at names of your coloring images - rename one if you have problems.
 * Mouse wheel works as a darkening or lightening current color.
 * Right mouse button works as a pipette tool - right click to get color from place under cursor.
-* Application currently have two language versions - english 🇬🇧 and polish 🇵🇱 (and they are not 100% finished yet).
+* Application currently have two language versions - english 🇬🇧 and polish 🇵🇱 (they are not 100% finished yet).
