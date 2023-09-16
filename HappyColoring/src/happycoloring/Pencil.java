@@ -33,12 +33,10 @@ import javax.swing.event.ChangeListener;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class Pencil implements DrawingTool {
-    private int size;
-    private Color color;
+public class Pencil extends AbstractPencil {
     private BufferedImage shape;
-    private BufferedImage pattern;
     private ChangeListener changeListener;
+    
     
     public Pencil(BufferedImage shape, Color color, int size) {
         this.shape = shape;
@@ -48,11 +46,6 @@ public class Pencil implements DrawingTool {
         createPattern();
     }
 
-    @Override
-    public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
-        Graphics2D g2d = canvas.createGraphics();
-        g2d.drawImage(pattern, x-size/2, y-size/2, null);
-    }
 
     public ChangeListener getChangeListener() {
         return changeListener;
@@ -112,4 +105,5 @@ public class Pencil implements DrawingTool {
         if (changeListener != null)
             changeListener.stateChanged(new ChangeEvent(this));
     }
+
 }

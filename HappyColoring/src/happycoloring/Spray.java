@@ -24,7 +24,6 @@
 package happycoloring;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 import javax.swing.event.ChangeEvent;
@@ -34,9 +33,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class Spray implements DrawingTool {
-    private Color color;
-    private int size;
+public class Spray extends AbstractPencil {
     private ChangeListener changeListener;
 
     public Spray(Color c, int size) {
@@ -62,13 +59,7 @@ public class Spray implements DrawingTool {
     public int getSize() {
         return size;
     }
-
-    @Override
-    public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
-        Graphics2D g2d = canvas.createGraphics();
-        g2d.drawImage(getPattern(), x-size/2, y-size/2, null);
-    }
-
+    
     @Override
     public void setColor(Color c) {
         this.color = c;
@@ -80,7 +71,8 @@ public class Spray implements DrawingTool {
         return color;
     }
 
-    private BufferedImage getPattern() {
+    @Override
+    protected BufferedImage getPattern() {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Random rnd = new Random();
             
@@ -104,5 +96,4 @@ public class Spray implements DrawingTool {
         if (changeListener != null)
             changeListener.stateChanged(new ChangeEvent(this));
     }
-    
 }

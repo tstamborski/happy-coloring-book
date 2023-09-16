@@ -33,10 +33,8 @@ import javax.swing.event.ChangeListener;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class Rubber implements DrawingTool {
-    private Color color;
-    private int size;
-    private BufferedImage shape, pattern;
+public class Rubber extends AbstractPencil {
+    private BufferedImage shape;
     private ChangeListener changeListener;
 
     public Rubber(BufferedImage shape, int size) {
@@ -74,12 +72,6 @@ public class Rubber implements DrawingTool {
     }
 
     @Override
-    public void apply(BufferedImage canvas, int x, int y, BufferedImage ref) {
-        Graphics2D g2d = canvas.createGraphics();
-        g2d.drawImage(pattern, x-size/2, y-size/2, null);
-    }
-
-    @Override
     public void setColor(Color c) {
         this.color = c;
         createPattern();
@@ -98,5 +90,4 @@ public class Rubber implements DrawingTool {
         if (changeListener != null)
             changeListener.stateChanged(new ChangeEvent(this));
     }
-    
 }

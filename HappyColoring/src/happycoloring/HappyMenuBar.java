@@ -53,7 +53,13 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
     private final JMenuItem clearItem, clearAllItem;
     private final ArrayList<NumberRadioButtonMenuItem> sizeItems;
     private final ArrayList<NumberRadioButtonMenuItem> zoomItems;
+    private final JMenuItem zoominItem, zoomoutItem;
     private final JMenuItem aboutItem;
+    
+    public static int SIZE_MAX = DrawingTool.SIZE_HUGE;
+    public static int SIZE_MIN = DrawingTool.SIZE_TINY;
+    public static int ZOOM_MAX = 400;
+    public static int ZOOM_MIN = 50;
     
     @Override
     public void loadi18n(ResourceBundle rb) {
@@ -177,19 +183,37 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         redoItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK));
         
         circlePencilItem = new JMenuItem("Circle", new ImageIcon(getClass().getResource("icons/circle16.png")));
+        circlePencilItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0));
         squarePencilItem = new JMenuItem("Square", new ImageIcon(getClass().getResource("icons/square16.png")));
+        squarePencilItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0));
         diamondPencilItem = new JMenuItem("Diamond", new ImageIcon(getClass().getResource("icons/diamond16.png")));
+        diamondPencilItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0));
         starPencilItem = new JMenuItem("Star", new ImageIcon(getClass().getResource("icons/star16.png")));
+        starPencilItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0));
         circleRubberItem = new JMenuItem("Circle", new ImageIcon(getClass().getResource("icons/circle16.png")));
+        circleRubberItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.SHIFT_DOWN_MASK));
         squareRubberItem = new JMenuItem("Square", new ImageIcon(getClass().getResource("icons/square16.png")));
+        squareRubberItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.SHIFT_DOWN_MASK));
         diamondRubberItem = new JMenuItem("Diamond", new ImageIcon(getClass().getResource("icons/diamond16.png")));
+        diamondRubberItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.SHIFT_DOWN_MASK));
         starRubberItem = new JMenuItem("Star", new ImageIcon(getClass().getResource("icons/star16.png")));
+        starRubberItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.SHIFT_DOWN_MASK));
         sprayItem = new  JMenuItem("Spray", new ImageIcon(getClass().getResource("icons/spray16.png")));
+        sprayItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0));
         softbrushItem = new  JMenuItem("Soft Brush", new ImageIcon(getClass().getResource("icons/flat-brush16.png")));
+        softbrushItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, 0));
         bucketItem = new  JMenuItem("Intelligent Bucket", new ImageIcon(getClass().getResource("icons/paint-bucket16.png")));
+        bucketItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
         
         colorItems = new ArrayList();
         HappyPalette.getInstance().forEach(e -> colorItems.add(new ColorMenuItem(e.getColor(), e.getName())));
+        for (int i = 0; i < colorItems.size(); i++)
+            if (i < 9)
+                colorItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1+i,
+                        0));
+            else
+                colorItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1+i-9,
+                        KeyEvent.SHIFT_DOWN_MASK));
         customColorItem = new JMenuItem("Custom Color...");
         customColorItem.setIcon(new ImageIcon(getClass().getResource("icons/palette16.png")));
         customColorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
@@ -201,16 +225,25 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         sizeItems.add(new NumberRadioButtonMenuItem("Big (16x16)", 16));
         sizeItems.add(new NumberRadioButtonMenuItem("Large (32x32)", 32));
         sizeItems.add(new NumberRadioButtonMenuItem("Huge (64x64)", 64));
+        for (int i = 0; i < sizeItems.size(); i++)
+            sizeItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F2+i, 0));
         zoomItems = new ArrayList();
-        zoomItems.add(new NumberRadioButtonMenuItem("50%", 0.5));
-        zoomItems.add(new NumberRadioButtonMenuItem("100%", 1.0));
-        zoomItems.add(new NumberRadioButtonMenuItem("200%", 2.0));
-        zoomItems.add(new NumberRadioButtonMenuItem("400%", 4.0));
+        for (int i = ZOOM_MIN; i <= ZOOM_MAX; i *= 2) {
+            zoomItems.add(new NumberRadioButtonMenuItem(String.format("%d%%", i), i));
+            if (i == 100)
+                zoomItems.get(zoomItems.size()-1).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_0,
+                        KeyEvent.CTRL_DOWN_MASK));
+        }
+        zoominItem = new JMenuItem("Zoom In", new ImageIcon(getClass().getResource("icons/zoomin16.png")));
+        zoominItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, KeyEvent.CTRL_DOWN_MASK));
+        zoomoutItem = new JMenuItem("Zoom Out", new ImageIcon(getClass().getResource("icons/zoomout16.png")));
+        zoomoutItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, KeyEvent.CTRL_DOWN_MASK));
         polishItem = new JMenuItem("Polish");
         polishItem.setIcon(new ImageIcon(getClass().getResource("icons/poland16.png")));
         englishItem = new JMenuItem("English");
         englishItem.setIcon(new ImageIcon(getClass().getResource("icons/united-kingdom16.png")));
         clearItem = new JMenuItem("Clear...", new ImageIcon(getClass().getResource("icons/cross-black16.png")));
+        clearItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, KeyEvent.CTRL_DOWN_MASK));
         clearAllItem = new JMenuItem("Clear All...", new ImageIcon(getClass().getResource("icons/bin16.png")));
         
         aboutItem = new JMenuItem("About...");
@@ -237,6 +270,9 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         zoomMenu.setIcon(new ImageIcon(getClass().getResource("icons/find16.png")));
         zoomGroup = new ButtonGroup();
         zoomItems.forEach(i -> {zoomMenu.add(i);zoomGroup.add(i);});
+        zoomMenu.addSeparator();
+        zoomMenu.add(zoominItem);
+        zoomMenu.add(zoomoutItem);
         languageMenu = new JMenu("Language");
         languageMenu.setIcon(new ImageIcon(getClass().getResource("icons/rolling-stones16.png")));
         languageMenu.add(englishItem);
@@ -378,6 +414,14 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
 
     public ArrayList<NumberRadioButtonMenuItem> getZoomItems() {
         return zoomItems;
+    }
+    
+    public JMenuItem getZoomInItem() {
+        return zoominItem;
+    }
+    
+    public JMenuItem getZoomOutItem() {
+        return zoomoutItem;
     }
 
     public JMenuItem getClearItem() {

@@ -141,7 +141,9 @@ public class HappyColoring extends JFrame implements HappyI18n {
         
         menu.getClearAllItem().addActionListener(ae -> clearAll());
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
-        menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getDoubleValue())));
+        menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getIntValue() / 100.0)));
+        menu.getZoomInItem().addActionListener(ae -> setCurrentZoom(Math.min(getCurrentZoom()*2, HappyMenuBar.ZOOM_MAX/100.0)));
+        menu.getZoomOutItem().addActionListener(ae -> setCurrentZoom(Math.max(getCurrentZoom()/2, HappyMenuBar.ZOOM_MIN/100.0)));
         menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl")));
         menu.getEnglishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("en")));
         
@@ -254,6 +256,8 @@ public class HappyColoring extends JFrame implements HappyI18n {
             shortcutToolbar.getPencilButton().setSelected(true);
         else if (currentDrawingTool == rubber)
             shortcutToolbar.getRubberButton().setSelected(true);
+        else if (currentDrawingTool == spray)
+            shortcutToolbar.getSprayButton().setSelected(true);
         else if (currentDrawingTool == softbrush)
             shortcutToolbar.getSoftbrushButton().setSelected(true);
         else if (currentDrawingTool == bucket)
@@ -276,7 +280,9 @@ public class HappyColoring extends JFrame implements HappyI18n {
         shortcutToolbar.getSizeButtons().forEach(b -> b.setSelected(b.getIntValue() == currentDrawingTool.getSize()));
         
         if (isFilesOpened) {
-            menu.getZoomItems().forEach(i -> i.setSelected(i.getDoubleValue() == pagesList.getCurrent().getZoom()));
+            menu.getZoomItems().forEach(i -> i.setSelected(i.getIntValue() == (int)(pagesList.getCurrent().getZoom() * 100.0)));
+            menu.getZoomInItem().setEnabled(getCurrentZoom() < HappyMenuBar.ZOOM_MAX/100.0);
+            menu.getZoomOutItem().setEnabled(getCurrentZoom() > HappyMenuBar.ZOOM_MIN/100.0);
             status.setDisplayedInfo(pagesList);
             
             menu.getUndoItem().setEnabled(pagesList.getCurrent().isUndo());
@@ -376,6 +382,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
     
     protected void setCurrentTool(DrawingTool tool) {
         tool.setColor(currentDrawingTool.getColor());
+        tool.setSize(currentDrawingTool.getSize());
         currentDrawingTool = tool;
         pagesList.forEach(i -> i.setDrawingTool(tool));
         updateGUI();
@@ -390,5 +397,9 @@ public class HappyColoring extends JFrame implements HappyI18n {
         if (!pagesList.isEmpty())
             pagesList.getCurrent().setZoom(d);
         updateGUI();
+    }
+    
+    protected double getCurrentZoom() {
+        return pagesList.getCurrent().getZoom();
     }
 }

@@ -30,37 +30,21 @@ import javax.swing.JToggleButton;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class NumberToggleButton extends JToggleButton {
+public class NumberToggleButton extends JToggleButton implements Numberable {
     private int intValue;
-    private double doubleValue;
     
     public NumberToggleButton(Icon icon, int n) {
         super(icon);
         intValue = n;
-        doubleValue = 0.0;
-    }
-    
-    public NumberToggleButton(Icon icon, double n) {
-        super(icon);
-        intValue = 0;
-        doubleValue = n;
     }
 
+    @Override
     public int getIntValue() {
         return intValue;
     }
 
+    @Override
     public void setIntValue(int intValue) {
         this.intValue = intValue;
     }
-
-    public double getDoubleValue() {
-        return doubleValue;
-    }
-
-    public void setDoubleValue(double doubleValue) {
-        this.doubleValue = doubleValue;
-    }
-    
-    
 }

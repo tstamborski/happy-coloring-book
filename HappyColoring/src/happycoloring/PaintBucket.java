@@ -36,6 +36,7 @@ import javax.swing.event.ChangeListener;
  */
 public class PaintBucket implements DrawingTool {
     private Color color;
+    private int size; //tylko po to zeby ladnie dzialalo z reszta narzedzi/programu
     private int baseRGB, dstRGB;
     private final Queue<Coordinate> queue;
     private BufferedImage canvas, reference;
@@ -48,12 +49,12 @@ public class PaintBucket implements DrawingTool {
     
     @Override
     public void setSize(int size) {
-        
+        this.size = size;
     }
 
     @Override
     public int getSize() {
-        return 0;
+        return this.size;
     }
 
     @Override
@@ -149,6 +150,10 @@ public class PaintBucket implements DrawingTool {
         bgr = bgr | 0xff000000;
         
         return bgr;
+    }
+
+    @Override
+    public void release() {
     }
 }
 

@@ -43,7 +43,7 @@ public class ColoringPage extends JComponent {
     private final BufferedImage compImage;
     private BufferedImage canvasImage;
     private final BufferedImage refImage;
-    private Drawable drawingTool;
+    private DrawingTool drawingTool;
     private double zoom;
     private final ColoringUndoRedo history;
     private ActionListener actionListener;
@@ -60,11 +60,11 @@ public class ColoringPage extends JComponent {
         return canvasImage;
     }
 
-    public Drawable getDrawingTool() {
+    public DrawingTool getDrawingTool() {
         return drawingTool;
     }
 
-    public void setDrawingTool(Drawable drawingTool) {
+    public void setDrawingTool(DrawingTool drawingTool) {
         this.drawingTool = drawingTool;
     }
 
@@ -176,8 +176,10 @@ public class ColoringPage extends JComponent {
         if (e.getButton() == MouseEvent.BUTTON1)
             if (e.getID() == MouseEvent.MOUSE_PRESSED)
                 draw(e.getX(), e.getY());
-            else if (e.getID() == MouseEvent.MOUSE_RELEASED)
+            else if (e.getID() == MouseEvent.MOUSE_RELEASED) {
+                drawingTool.release();
                 noteAction();
+            }
         
         if (e.getButton() == MouseEvent.BUTTON3)
             if (e.getID() == MouseEvent.MOUSE_PRESSED)

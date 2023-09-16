@@ -29,37 +29,21 @@ import javax.swing.JRadioButtonMenuItem;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class NumberRadioButtonMenuItem extends JRadioButtonMenuItem {
+public class NumberRadioButtonMenuItem extends JRadioButtonMenuItem implements Numberable {
     private int intValue;
-    private double doubleValue;
     
     public NumberRadioButtonMenuItem(String text, int n) {
         super(text);
         intValue = n;
-        doubleValue = 0.0;
-    }
-    
-    public NumberRadioButtonMenuItem(String text, double n) {
-        super(text);
-        intValue = 0;
-        doubleValue = n;
     }
 
+    @Override
     public int getIntValue() {
         return intValue;
     }
 
+    @Override
     public void setIntValue(int intValue) {
         this.intValue = intValue;
     }
-
-    public double getDoubleValue() {
-        return doubleValue;
-    }
-
-    public void setDoubleValue(double doubleValue) {
-        this.doubleValue = doubleValue;
-    }
-    
-    
 }
