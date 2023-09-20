@@ -48,6 +48,19 @@ public class ColoringPageList extends ArrayList<ColoringPage> {
         return list;
     }
     
+    public static ColoringPageList fromResourceImages() throws IOException {
+        ColoringPageList list = new ColoringPageList();
+        
+        for (HappyImage hi: HappyResourceImages.getInstance()) {
+            list.add(new ColoringPage(
+                    ImageIO.read(hi.getURL()),
+                    hi.getName()
+            ));
+        }
+        
+        return list;
+    }
+    
     public ColoringPage next() {
         setCurrentIndex(currentIndex+1);
         return getCurrent();

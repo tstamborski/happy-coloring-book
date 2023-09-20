@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -71,13 +72,10 @@ public class HappyColoring extends JFrame implements HappyI18n {
     
     public HappyColoring() {
         createDrawingTools();
-        pagesList = new ColoringPageList();
         try {
             settings = new HappySettings();
         } catch (IOException ex) {
-            Logger.getLogger(HappyColoring.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-            Util.showError(null, "Cannot access settings directory!");
-            System.exit(-1);
+            Util.criticalError(ex, "Cannot access settings directory!");
         }
         
         createDialogs();
@@ -91,7 +89,14 @@ public class HappyColoring extends JFrame implements HappyI18n {
         setSize(800, 600);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        enableEvents(WindowEvent.WINDOW_EVENT_MASK);
+        enableEvents(WindowEvent.WINDOW_EVENT_MASK | MouseEvent.MOUSE_WHEEL_EVENT_MASK);
+        
+        try {
+            pagesList = ColoringPageList.fromResourceImages();
+            loadPagesList();
+        } catch (IOException ex) {
+            Util.casualError(ex, "Cannot access builded-in resource images!");
+        }
         
         loadi18n(Locale.getDefault());
         updateGUI();
@@ -103,6 +108,14 @@ public class HappyColoring extends JFrame implements HappyI18n {
             settings.save(pagesList);
         
         super.processWindowEvent(e);
+    }
+
+    @Override
+    protected void processMouseWheelEvent(MouseWheelEvent e) {
+        super.processMouseWheelEvent(e);
+        
+        if (e.getWheelRotation() != 0)
+            currentDrawingTool.setColor(ColorUtil.darker(currentDrawingTool.getColor(), 0x10 * e.getWheelRotation()));
     }
     
     protected void setCurrentColor(Color c) {
@@ -297,6 +310,25 @@ public class HappyColoring extends JFrame implements HappyI18n {
             shortcutToolbar.getRedoButton().setEnabled(false);
         }
     }
+    
+    private void loadPagesList() {
+        pagesList.forEach(cp -> cp.addMouseMotionListener(new MouseMotionListener() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
+            }
+        }));
+        pagesList.forEach(cp -> cp.setActionListener(ae -> updateGUI()));
+        
+        settings.load(pagesList);
+        setCurrentTool(currentDrawingTool);
+        setCurrentPage(pagesList.getCurrent());
+    }
 
     protected void saveAsImage() {
         if (saveAsDialog.showSaveDialog(this) == HappyLoadDialog.CANCEL_OPTION)
@@ -339,22 +371,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
             Util.showError(this, ex.getMessage());
         }
         
-        pagesList.forEach(cp -> cp.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                status.setDisplayedCoord((int)(e.getX()/cp.getZoom()), (int)(e.getY()/cp.getZoom()));
-            }
-        }));
-        pagesList.forEach(cp -> cp.setActionListener(ae -> updateGUI()));
-        
-        settings.load(pagesList);
-        setCurrentTool(currentDrawingTool);
-        setCurrentPage(pagesList.getCurrent());
+        loadPagesList();
     }
     
     protected void undo() {

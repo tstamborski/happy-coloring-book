@@ -124,7 +124,7 @@ public class ColoringPage extends JComponent {
         
         setPreferredSize(new Dimension(refImage.getWidth(), refImage.getHeight()));
         zoom = 1.0;
-        enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK | MouseEvent.MOUSE_WHEEL_EVENT_MASK);
+        enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK);
     }
 
     public BufferedImage toBufferedImage(int type) {
@@ -149,15 +149,7 @@ public class ColoringPage extends JComponent {
         
         g.drawImage(compImage, 0, 0, getWidth(), getHeight(), this);
     }
-
-    @Override
-    protected void processMouseWheelEvent(MouseWheelEvent e) {
-        super.processMouseWheelEvent(e);
-        
-        if (e.getWheelRotation() != 0)
-            drawingTool.setColor(ColorUtil.darker(drawingTool.getColor(), 0x10 * e.getWheelRotation()));
-    }
-
+    
     @Override
     protected void processMouseMotionEvent(MouseEvent e) {
         super.processMouseMotionEvent(e);
