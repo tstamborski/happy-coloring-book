@@ -16,7 +16,7 @@ import javax.swing.*;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class AboutDialog extends JDialog {
+public class AboutDialog extends JDialog implements HappyI18n {
     
     private final JTabbedPane tabs;
     private final JPanel aboutPanel, lowerPanel;
@@ -116,6 +116,7 @@ public class AboutDialog extends JDialog {
         licenseArea.setText(builder.toString());
     }
     
+    @Override
     public void loadi18n(ResourceBundle i18n) {
         setTitle(i18n.getString("AboutDialog"));
         tabs.setTitleAt(0, i18n.getString("AboutTab"));
@@ -126,9 +127,6 @@ public class AboutDialog extends JDialog {
         setApplicationVersion(i18n.getString("ApplicationVersion"));
         setApplicationCopyright(i18n.getString("ApplicationCopyright"));
         setApplicationExtraInfo(i18n.getString("ApplicationExtraInfo"));
-        
-        revalidate();
-        repaint();
     }
     
     protected JTabbedPane getJTabbedPane() {

@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class HappyColoring extends JFrame implements HappyI18n {
+public final class HappyColoring extends JFrame implements HappyI18n {
 
     private HappyMenuBar menu;
     private HappyStatusBar status;
@@ -51,8 +51,11 @@ public class HappyColoring extends JFrame implements HappyI18n {
     private HappySettings settings;
     private ResourceBundle i18n;
     
-    private void loadi18n(Locale locale) {
+    public void loadi18n(Locale locale) {
         i18n = ResourceBundle.getBundle("happycoloring.i18n.i18n", locale);
+        if (i18n.getLocale() != locale)
+            i18n = ResourceBundle.getBundle("happycoloring.i18n.i18n", Locale.ROOT);
+        
         loadi18n(i18n);
     }
     
@@ -99,7 +102,7 @@ public class HappyColoring extends JFrame implements HappyI18n {
         }
         
         loadi18n(Locale.getDefault());
-        updateGUI();
+        //updateGUI();
     }
 
     @Override
@@ -157,8 +160,8 @@ public class HappyColoring extends JFrame implements HappyI18n {
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getIntValue() / 100.0)));
         menu.getZoomInItem().addActionListener(ae -> setCurrentZoom(Math.min(getCurrentZoom()*2, HappyMenuBar.ZOOM_MAX/100.0)));
         menu.getZoomOutItem().addActionListener(ae -> setCurrentZoom(Math.max(getCurrentZoom()/2, HappyMenuBar.ZOOM_MIN/100.0)));
-        menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl")));
-        menu.getEnglishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("en")));
+        menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl-PL")));
+        menu.getEnglishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("en-UK")));
         
         menu.getColorItems().forEach(cb -> cb.addActionListener(ae->setCurrentColor(cb.getColor())));
         menu.getCustomColorItem().addActionListener((ae)->setCustomColor());

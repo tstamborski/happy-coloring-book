@@ -136,6 +136,10 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         zoomMenu.setText(rb.getString("ZoomMenu"));
         zoomMenu.setMnemonic(rb.getString("ZoomMenuMnemonic").charAt(0));
         zoomItems.forEach(i -> i.setMnemonic(i.getText().charAt(0)));
+        zoominItem.setText(rb.getString("ZoomInMenuItem"));
+        zoominItem.setMnemonic(rb.getString("ZoomInMenuItemMnemonic").charAt(0));
+        zoomoutItem.setText(rb.getString("ZoomOutMenuItem"));
+        zoomoutItem.setMnemonic(rb.getString("ZoomOutMenuItemMnemonic").charAt(0));
         sizeMenu.setText(rb.getString("SizeMenu"));
         sizeMenu.setMnemonic(rb.getString("SizeMenuMnemonic").charAt(0));
         sizeItems.get(0).setText(rb.getString("TinySizeMenuItem"));

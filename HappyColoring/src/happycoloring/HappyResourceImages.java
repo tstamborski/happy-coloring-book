@@ -37,6 +37,7 @@ public class HappyResourceImages extends ArrayList<HappyImage> {
         add(new HappyImage(getClass().getResource("images/hyenas.png"), "Hyenas"));
         add(new HappyImage(getClass().getResource("images/lion.png"), "Lion"));
         add(new HappyImage(getClass().getResource("images/hippo.png"), "Hippo"));
+        add(new HappyImage(getClass().getResource("images/gnu.png"), "Gnu"));
     }
     
     public static HappyResourceImages getInstance() {
