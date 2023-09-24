@@ -35,6 +35,8 @@ import javax.swing.event.ChangeListener;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class PaintBucket implements DrawingTool {
+    private static final int DEFAULT_TOLERANCE = 0x80; //do spr czy kolor jest "prawie" czarny
+    
     private Color color;
     private int size; //tylko po to zeby ladnie dzialalo z reszta narzedzi/programu
     private int baseRGB, dstRGB;
@@ -127,7 +129,7 @@ public class PaintBucket implements DrawingTool {
             return false;
         if (c.getY() < 0 || c.getY() >= canvas.getHeight())
             return false;
-        if (isAlmostBlack(reference.getRGB(c.getX(), c.getY()), 0x80))
+        if (isAlmostBlack(reference.getRGB(c.getX(), c.getY()), DEFAULT_TOLERANCE))
             return false;
         if (canvas.getRGB(c.getX(), c.getY()) != baseRGB)
             return false;

@@ -36,7 +36,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     private AboutDialog aboutDialog;
     private HappyLoadDialog loadDialog;
     private HappySaveDialog saveAsDialog;
-    private final HappyScrollPane scrollPane;
+    private HappyScrollPane scrollPane;
     private HappyPaletteToolBar paletteToolbar;
     private HappyShortcutToolBar shortcutToolbar;
     private ColoringPageList pagesList;
@@ -85,8 +85,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         createMenu();
         createToolbars();
         createStatusbar();
-        scrollPane = new HappyScrollPane();
-        add(scrollPane);
+        createScrollPane();
         
         setIconImage(new ImageIcon(getClass().getResource("icons/coloring64.png")).getImage());
         setSize(800, 600);
@@ -102,7 +101,6 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         }
         
         loadi18n(Locale.getDefault());
-        //updateGUI();
     }
 
     @Override
@@ -116,6 +114,9 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     @Override
     protected void processMouseWheelEvent(MouseWheelEvent e) {
         super.processMouseWheelEvent(e);
+        
+        if (e.getModifiersEx() != 0)
+            return;
         
         if (e.getWheelRotation() != 0)
             currentDrawingTool.setColor(ColorUtil.darker(currentDrawingTool.getColor(), 0x10 * e.getWheelRotation()));
@@ -158,8 +159,8 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         menu.getClearAllItem().addActionListener(ae -> clearAll());
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getIntValue() / 100.0)));
-        menu.getZoomInItem().addActionListener(ae -> setCurrentZoom(Math.min(getCurrentZoom()*2, HappyMenuBar.ZOOM_MAX/100.0)));
-        menu.getZoomOutItem().addActionListener(ae -> setCurrentZoom(Math.max(getCurrentZoom()/2, HappyMenuBar.ZOOM_MIN/100.0)));
+        menu.getZoomInItem().addActionListener(ae -> setCurrentZoom(Math.min(getCurrentZoom()*2.0, HappyMenuBar.ZOOM_MAX/100.0)));
+        menu.getZoomOutItem().addActionListener(ae -> setCurrentZoom(Math.max(getCurrentZoom()/2.0, HappyMenuBar.ZOOM_MIN/100.0)));
         menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl-PL")));
         menu.getEnglishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("en-UK")));
         
@@ -219,6 +220,19 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     private void createStatusbar() {
         status = new HappyStatusBar();
         add(status, BorderLayout.SOUTH);
+    }
+    
+    private void createScrollPane() {
+        scrollPane = new HappyScrollPane();
+        scrollPane.addMouseWheelListener((e) -> {
+            if (e.isControlDown()) {
+                if (e.getWheelRotation() < 0)
+                    setCurrentZoom(Math.min(getCurrentZoom()*2.0, HappyMenuBar.ZOOM_MAX/100.0));
+                if (e.getWheelRotation() > 0)
+                    setCurrentZoom(Math.max(getCurrentZoom()/2.0, HappyMenuBar.ZOOM_MIN/100.0));
+            }
+        });
+        add(scrollPane);
     }
     
     private void createDrawingTools() {

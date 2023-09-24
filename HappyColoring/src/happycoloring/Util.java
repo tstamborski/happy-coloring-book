@@ -30,6 +30,16 @@ public class Util {
         return filename.substring(0, filename.lastIndexOf('.'));
     }
     
+    public static int bound(int val, int min, int max) {
+        if (min <= val && val <= max)
+            return val;
+        else
+            if (val < min)
+                return min;
+            else
+                return max;
+    }
+    
     public static void showError(Component parent, String str) {
         JOptionPane.showMessageDialog(parent, str, "Error!", JOptionPane.ERROR_MESSAGE);
     }

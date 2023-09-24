@@ -25,19 +25,25 @@ package happycoloring;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class HappyResourceImages extends ArrayList<HappyImage> {
+public class HappyResourceImages extends ArrayList<ImageEntry> {
     private static HappyResourceImages instance;
     
     private HappyResourceImages() {
-        add(new HappyImage(getClass().getResource("images/hyenas.png"), "Hyenas"));
-        add(new HappyImage(getClass().getResource("images/lion.png"), "Lion"));
-        add(new HappyImage(getClass().getResource("images/hippo.png"), "Hippo"));
-        add(new HappyImage(getClass().getResource("images/gnu.png"), "Gnu"));
+        ResourceBundle rb = ResourceBundle.getBundle("happycoloring.images.images", Locale.ROOT);
+        Enumeration<String> keys = rb.getKeys();
+        
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            add(new ImageEntry(getClass().getResource(rb.getString(key)), key));
+        }
     }
     
     public static HappyResourceImages getInstance() {
@@ -48,11 +54,11 @@ public class HappyResourceImages extends ArrayList<HappyImage> {
     }
 }
 
-class HappyImage {
+class ImageEntry {
     private final URL url;
     private final String name;
     
-    public HappyImage(URL url, String name) {
+    public ImageEntry(URL url, String name) {
         this.url = url;
         if (name == null)
             this.name = "Anonymous image";

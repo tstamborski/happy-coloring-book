@@ -220,7 +220,7 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
                         KeyEvent.SHIFT_DOWN_MASK));
         customColorItem = new JMenuItem("Custom Color...");
         customColorItem.setIcon(new ImageIcon(getClass().getResource("icons/palette16.png")));
-        customColorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK));
+        customColorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0));
         
         sizeItems = new ArrayList();
         sizeItems.add(new NumberRadioButtonMenuItem("Tiny (2x2)", 2));

@@ -27,6 +27,7 @@ import java.awt.Component;
 import java.awt.GridBagLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 
 /**
  *
@@ -44,8 +45,10 @@ public class HappyScrollPane extends JScrollPane {
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         
         setWheelScrollingEnabled(false);
+        
+        getViewport().setScrollMode(JViewport.BLIT_SCROLL_MODE);
     }
-
+    
     @Override
     public void setViewportView(Component view) {
         innerPanel.removeAll();

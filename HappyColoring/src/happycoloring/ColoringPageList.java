@@ -51,7 +51,7 @@ public class ColoringPageList extends ArrayList<ColoringPage> {
     public static ColoringPageList fromResourceImages() throws IOException {
         ColoringPageList list = new ColoringPageList();
         
-        for (HappyImage hi: HappyResourceImages.getInstance()) {
+        for (ImageEntry hi: HappyResourceImages.getInstance()) {
             list.add(new ColoringPage(
                     ImageIO.read(hi.getURL()),
                     hi.getName()
