@@ -25,50 +25,32 @@ package happycoloring;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class HappyPalette extends ArrayList<HappyPaletteEntry> {
-    private static HappyPalette instance;
-    
-    private HappyPalette() {
-        add(new HappyPaletteEntry(new Color(0xe8,0x00,0x00), "Red"));
-        add(new HappyPaletteEntry(new Color(0x00,0xe8,0x00), "Green"));
-        add(new HappyPaletteEntry(new Color(0x00,0x00,0xe8), "Blue"));
+public class HappyPalette extends ArrayList<ColorEntry> {
+    public HappyPalette(ResourceBundle rb) {
+        Enumeration<String> keys = rb.getKeys();
         
-        add(new HappyPaletteEntry(new Color(0xe8,0xe8,0x00), "Yellow"));
-        add(new HappyPaletteEntry(new Color(0xff,0xaa,0x00), "Orange"));
-        add(new HappyPaletteEntry(new Color(0x80,0x00,0xe8), "Violet"));
-        
-        add(new HappyPaletteEntry(new Color(0xe8,0x80,0x80), "Pink"));
-        add(new HappyPaletteEntry(new Color(0x66,0xff,0x66), "LightGreen"));
-        add(new HappyPaletteEntry(new Color(0x80,0x80,0xff), "LightBlue"));
-        add(new HappyPaletteEntry(new Color(0x80,0xff,0xff), "SkyBlue"));
-        
-        add(new HappyPaletteEntry(new Color(0x44,0x22,0x00), "Brown"));
-        add(new HappyPaletteEntry(new Color(0x22,0x66,0x00), "DarkGreen"));
-        add(new HappyPaletteEntry(new Color(0xaa,0xaa,0x00), "Gold"));
-        add(new HappyPaletteEntry(new Color(0x88,0x88,0x88), "Gray"));
-        
-        add(new HappyPaletteEntry(Color.white, "White"));
-        add(new HappyPaletteEntry(Color.black, "Black"));
-    }
-    
-    public static HappyPalette getInstance() {
-        if (instance == null)
-            return instance = new HappyPalette();
-        else
-            return instance;
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            Scanner scanner = new Scanner(rb.getString(key));
+            
+            add(new ColorEntry(new Color(scanner.nextInt(), scanner.nextInt(), scanner.nextInt()), key));
+        }
     }
 }
 
-class HappyPaletteEntry {
+class ColorEntry {
     private final Color color;
     private final String name;
 
-    public HappyPaletteEntry(Color c, String n) {
+    public ColorEntry(Color c, String n) {
         color = c;
         if (n == null)
             name = "UnknownColor";

@@ -48,6 +48,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     private Spray spray;
     private PaintBucket bucket;
     
+    private HappyPalette defaultPalette, pastelPalette, juicyPalette, dirtyPalette;
     private HappySettings settings;
     private ResourceBundle i18n;
     
@@ -74,7 +75,9 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     }
     
     public HappyColoring() {
+        createPalettes();
         createDrawingTools();
+        
         try {
             settings = new HappySettings();
         } catch (IOException ex) {
@@ -152,13 +155,17 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     }
     
     private void createMenu() {
-        menu = new HappyMenuBar();
+        menu = new HappyMenuBar(defaultPalette);
         
         menu.getAboutItem().addActionListener((ae)->{aboutDialog.setVisible(true);});
         
         menu.getClearAllItem().addActionListener(ae -> clearAll());
         menu.getSizeItems().forEach(i -> i.addActionListener(ae -> setCurrentToolSize(i.getIntValue())));
         menu.getZoomItems().forEach(i -> i.addActionListener(ae -> setCurrentZoom(i.getIntValue() / 100.0)));
+        menu.getDefaultItem().addActionListener(ae -> setPalette(defaultPalette));
+        menu.getPastelItem().addActionListener(ae -> setPalette(pastelPalette));
+        menu.getJuicyItem().addActionListener(ae -> setPalette(juicyPalette));
+        menu.getDirtyItem().addActionListener(ae -> setPalette(dirtyPalette));
         menu.getZoomInItem().addActionListener(ae -> setCurrentZoom(Math.min(getCurrentZoom()*2.0, HappyMenuBar.ZOOM_MAX/100.0)));
         menu.getZoomOutItem().addActionListener(ae -> setCurrentZoom(Math.max(getCurrentZoom()/2.0, HappyMenuBar.ZOOM_MIN/100.0)));
         menu.getPolishItem().addActionListener(ae -> loadi18n(Locale.forLanguageTag("pl-PL")));
@@ -193,7 +200,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     }
     
     private void createToolbars() {
-        paletteToolbar = new HappyPaletteToolBar();
+        paletteToolbar = new HappyPaletteToolBar(defaultPalette);
         paletteToolbar.getColorButtons().forEach(cb -> cb.addActionListener(
                 (ae)->{setCurrentColor(((ColorButton)ae.getSource()).getColor());}
         ));
@@ -235,8 +242,19 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         add(scrollPane);
     }
     
+    private void createPalettes() {
+        defaultPalette = new HappyPalette(ResourceBundle.getBundle(
+                "happycoloring.palettes.default", Locale.ROOT));
+        pastelPalette = new HappyPalette(ResourceBundle.getBundle(
+                "happycoloring.palettes.pastel", Locale.ROOT));
+        juicyPalette = new HappyPalette(ResourceBundle.getBundle(
+                "happycoloring.palettes.juicy", Locale.ROOT));
+        dirtyPalette = new HappyPalette(ResourceBundle.getBundle(
+                "happycoloring.palettes.dirty", Locale.ROOT));
+    }
+    
     private void createDrawingTools() {
-        Color color = HappyPalette.getInstance().get(0).getColor();
+        Color color = defaultPalette.get(0).getColor();
         
         try {
             circlePattern = ImageIO.read(getClass().getResourceAsStream("patterns/circle16.png"));
@@ -371,8 +389,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
                     break;
             }
         } catch (IOException ex) {
-            Logger.getLogger(HappyColoring.class.getName()).log(Level.WARNING, ex.getMessage(), this);
-            Util.showError(this, ex.getMessage());
+            Util.casualError(ex, "Access denied! Cannot save the file!");
         }
     }
     
@@ -384,8 +401,9 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         try {
             pagesList = ColoringPageList.fromFileArray(loadDialog.getSelectedFiles());
         } catch (IOException ex) {
-            Logger.getLogger(HappyColoring.class.getName()).log(Level.WARNING, ex.getMessage(), this);
-            Util.showError(this, ex.getMessage());
+            Util.casualError(ex, "Cannot load selected file(s)!");
+        } catch (Exception ex) {
+            Util.casualError(ex, "Cannot load selected file(s)!");
         }
         
         loadPagesList();
@@ -407,6 +425,11 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     
     protected void previousPage() {
         setCurrentPage(pagesList.previous());
+    }
+    
+    protected void setPalette(HappyPalette pal) {
+        menu.setPalette(pal);
+        paletteToolbar.setPalette(pal);
     }
     
     protected void setCurrentPage(ColoringPage page) {

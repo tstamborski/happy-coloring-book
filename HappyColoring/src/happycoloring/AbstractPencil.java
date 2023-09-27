@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2023 tstam.
+ * Copyright 2023 Tobiasz Stamborski <tstamborski@outlook.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author tstam
+ * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public abstract class AbstractPencil implements DrawingTool {
     protected int size;

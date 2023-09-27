@@ -41,7 +41,6 @@ public class ColorButton extends JButton implements Colorable {
     public final void setColor(Color c) {
         this.color = c;
         setIcon(new ColorIcon(color, 16));
-        setToolTipText(String.format("0x%06x", color.getRGB()&0x00ffffff));
     }
 
     @Override

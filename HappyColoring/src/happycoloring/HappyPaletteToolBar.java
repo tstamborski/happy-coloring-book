@@ -36,10 +36,12 @@ import javax.swing.JToolBar;
 public class HappyPaletteToolBar extends JToolBar implements HappyI18n {
     ArrayList<ColorButton> colorButtons;
     private final JButton paletteButton;
+    HappyPalette palette;
     
-    public HappyPaletteToolBar() {
+    public HappyPaletteToolBar(HappyPalette palette) {
         colorButtons = new ArrayList<>();
-        HappyPalette.getInstance().forEach(e -> colorButtons.add(new ColorButton(e.getColor())));
+        this.palette = palette;
+        this.palette.forEach(e -> colorButtons.add(new ColorButton(e.getColor())));
         
         paletteButton = new JButton(new ImageIcon(getClass().getResource("icons/palette16.png")));
         paletteButton.setToolTipText("Custom color...");
@@ -51,6 +53,16 @@ public class HappyPaletteToolBar extends JToolBar implements HappyI18n {
         add(paletteButton);
         
         setOrientation(JToolBar.VERTICAL);
+    }
+
+    public HappyPalette getPalette() {
+        return palette;
+    }
+
+    public void setPalette(HappyPalette palette) {
+        this.palette = palette;
+        for (int i = 0; i < colorButtons.size(); i++)
+            colorButtons.get(i).setColor(palette.get(i).getColor());
     }
 
     public JButton getPaletteButton() {
@@ -65,7 +77,7 @@ public class HappyPaletteToolBar extends JToolBar implements HappyI18n {
     public void loadi18n(ResourceBundle rb) {
         for (int i = 0; i < colorButtons.size(); i++)
             colorButtons.get(i).setToolTipText(
-                    rb.getString(HappyPalette.getInstance().get(i).getName())
+                    rb.getString(palette.get(i).getName())
             );
         paletteButton.setToolTipText(rb.getString("CustomColorToolTip"));
     }

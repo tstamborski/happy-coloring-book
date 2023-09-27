@@ -31,6 +31,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
 /**
@@ -38,10 +39,10 @@ import javax.swing.KeyStroke;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class HappyMenuBar extends JMenuBar implements HappyI18n {
-    private final JMenu fileMenu, editMenu, toolMenu, paletteMenu, optionsMenu, helpMenu;
+    private final JMenu fileMenu, editMenu, toolMenu, colorMenu, optionsMenu, helpMenu;
     private final JMenu pencilsMenu, rubbersMenu;
-    private final JMenu sizeMenu, zoomMenu, languageMenu;
-    private final ButtonGroup sizeGroup, zoomGroup;
+    private final JMenu paletteMenu, sizeMenu, zoomMenu, languageMenu;
+    private final ButtonGroup paletteGroup, sizeGroup, zoomGroup;
     private final JMenuItem loadItem, nextItem, previousItem, saveAsItem, exitItem;
     private final JMenuItem undoItem, redoItem;
     private final JMenuItem circlePencilItem, squarePencilItem, diamondPencilItem, starPencilItem;
@@ -51,10 +52,13 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
     private final JMenuItem customColorItem;
     private final JMenuItem polishItem, englishItem;
     private final JMenuItem clearItem, clearAllItem;
+    private final JRadioButtonMenuItem defaultItem, pastelItem, juicyItem, dirtyItem;
     private final ArrayList<NumberRadioButtonMenuItem> sizeItems;
     private final ArrayList<NumberRadioButtonMenuItem> zoomItems;
     private final JMenuItem zoominItem, zoomoutItem;
     private final JMenuItem aboutItem;
+    
+    private HappyPalette palette;
     
     public static int SIZE_MAX = DrawingTool.SIZE_HUGE;
     public static int SIZE_MIN = DrawingTool.SIZE_TINY;
@@ -114,12 +118,12 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         bucketItem.setText(rb.getString("BucketMenuItem"));
         bucketItem.setMnemonic(rb.getString("BucketMenuItemMnemonic").charAt(0));
         
-        paletteMenu.setText(rb.getString("PaletteMenu"));
-        paletteMenu.setMnemonic(rb.getString("PaletteMenuMnemonic").charAt(0));
+        colorMenu.setText(rb.getString("ColorMenu"));
+        colorMenu.setMnemonic(rb.getString("ColorMenuMnemonic").charAt(0));
         for (int i = 0; i < colorItems.size(); i++) {
-            colorItems.get(i).setText(rb.getString(HappyPalette.getInstance().get(i).getName()));
+            colorItems.get(i).setText(rb.getString(palette.get(i).getName()));
             colorItems.get(i).setMnemonic(
-                    rb.getString(HappyPalette.getInstance().get(i).getName()+"Mnemonic").charAt(0)
+                    rb.getString(palette.get(i).getName()+"Mnemonic").charAt(0)
             );
         }
         customColorItem.setText(rb.getString("CustomColorMenuItem"));
@@ -140,6 +144,16 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         zoominItem.setMnemonic(rb.getString("ZoomInMenuItemMnemonic").charAt(0));
         zoomoutItem.setText(rb.getString("ZoomOutMenuItem"));
         zoomoutItem.setMnemonic(rb.getString("ZoomOutMenuItemMnemonic").charAt(0));
+        paletteMenu.setText(rb.getString("PaletteMenu"));
+        paletteMenu.setMnemonic(rb.getString("PaletteMenuMnemonic").charAt(0));
+        defaultItem.setText(rb.getString("DefaultMenuItem"));
+        defaultItem.setMnemonic(rb.getString("DefaultMenuItemMnemonic").charAt(0));
+        pastelItem.setText(rb.getString("PastelMenuItem"));
+        pastelItem.setMnemonic(rb.getString("PastelMenuItemMnemonic").charAt(0));
+        juicyItem.setText(rb.getString("JuicyMenuItem"));
+        juicyItem.setMnemonic(rb.getString("JuicyMenuItemMnemonic").charAt(0));
+        dirtyItem.setText(rb.getString("DirtyMenuItem"));
+        dirtyItem.setMnemonic(rb.getString("DirtyMenuItemMnemonic").charAt(0));
         sizeMenu.setText(rb.getString("SizeMenu"));
         sizeMenu.setMnemonic(rb.getString("SizeMenuMnemonic").charAt(0));
         sizeItems.get(0).setText(rb.getString("TinySizeMenuItem"));
@@ -161,10 +175,11 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         helpMenu.setMnemonic(rb.getString("HelpMenuMnemonic").charAt(0));
         aboutItem.setText(rb.getString("AboutMenuItem"));
         aboutItem.setMnemonic(rb.getString("AboutMenuItemMnemonic").charAt(0));
-        
     }
     
-    public HappyMenuBar() {
+    public HappyMenuBar(HappyPalette palette) {
+        this.palette = palette;
+        
         nextItem = new JMenuItem("Next Page");
         nextItem.setIcon(new ImageIcon(getClass().getResource("icons/arrow-right16.png")));
         nextItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK));
@@ -210,7 +225,7 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         bucketItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
         
         colorItems = new ArrayList();
-        HappyPalette.getInstance().forEach(e -> colorItems.add(new ColorMenuItem(e.getColor(), e.getName())));
+        palette.forEach(e -> colorItems.add(new ColorMenuItem(e.getColor(), e.getName())));
         for (int i = 0; i < colorItems.size(); i++)
             if (i < 9)
                 colorItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1+i,
@@ -222,6 +237,14 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         customColorItem.setIcon(new ImageIcon(getClass().getResource("icons/palette16.png")));
         customColorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0));
         
+        defaultItem = new JRadioButtonMenuItem("Default", true);
+        defaultItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9, KeyEvent.CTRL_DOWN_MASK));
+        pastelItem = new JRadioButtonMenuItem("Pastel");
+        pastelItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F10, KeyEvent.CTRL_DOWN_MASK));
+        juicyItem = new JRadioButtonMenuItem("Juicy");
+        juicyItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, KeyEvent.CTRL_DOWN_MASK));
+        dirtyItem = new JRadioButtonMenuItem("Dirty");
+        dirtyItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F12, KeyEvent.CTRL_DOWN_MASK));
         sizeItems = new ArrayList();
         sizeItems.add(new NumberRadioButtonMenuItem("Tiny (2x2)", 2));
         sizeItems.add(new NumberRadioButtonMenuItem("Small (4x4)", 4));
@@ -266,6 +289,17 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         rubbersMenu.add(diamondRubberItem);
         rubbersMenu.add(starRubberItem);
         
+        paletteMenu = new JMenu("Palette");
+        paletteMenu.setIcon(new ImageIcon(getClass().getResource("icons/palette16.png")));
+        paletteGroup = new ButtonGroup();
+        paletteGroup.add(defaultItem);
+        paletteGroup.add(pastelItem);
+        paletteGroup.add(juicyItem);
+        paletteGroup.add(dirtyItem);
+        paletteMenu.add(defaultItem);
+        paletteMenu.add(pastelItem);
+        paletteMenu.add(juicyItem);
+        paletteMenu.add(dirtyItem);
         sizeMenu = new JMenu("Tool Size");
         sizeMenu.setIcon(new ImageIcon(getClass().getResource("icons/ruler16.png")));
         sizeGroup = new ButtonGroup();
@@ -304,14 +338,15 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         toolMenu.add(softbrushItem);
         toolMenu.add(bucketItem);
         
-        paletteMenu = new JMenu("Palette");
-        colorItems.forEach(mi -> paletteMenu.add(mi));
-        paletteMenu.addSeparator();
-        paletteMenu.add(customColorItem);
+        colorMenu = new JMenu("Colors");
+        colorItems.forEach(mi -> colorMenu.add(mi));
+        colorMenu.addSeparator();
+        colorMenu.add(customColorItem);
         
         optionsMenu = new JMenu("Options");
         optionsMenu.add(languageMenu);
         optionsMenu.addSeparator();
+        optionsMenu.add(paletteMenu);
         optionsMenu.add(zoomMenu);
         optionsMenu.add(sizeMenu);
         optionsMenu.addSeparator();
@@ -323,9 +358,35 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         add(fileMenu);
         add(editMenu);
         add(toolMenu);
-        add(paletteMenu);
+        add(colorMenu);
         add(optionsMenu);
         add(helpMenu);
+    }
+
+    public HappyPalette getPalette() {
+        return palette;
+    }
+
+    public void setPalette(HappyPalette palette) {
+        this.palette = palette;
+        for (int i = 0; i < colorItems.size(); i++)
+            colorItems.get(i).setColor(palette.get(i).getColor());
+    }
+
+    public JRadioButtonMenuItem getDefaultItem() {
+        return defaultItem;
+    }
+
+    public JRadioButtonMenuItem getPastelItem() {
+        return pastelItem;
+    }
+
+    public JRadioButtonMenuItem getJuicyItem() {
+        return juicyItem;
+    }
+
+    public JRadioButtonMenuItem getDirtyItem() {
+        return dirtyItem;
     }
 
     public JMenu getSizeMenu() {
