@@ -430,6 +430,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     protected void setPalette(HappyPalette pal) {
         menu.setPalette(pal);
         paletteToolbar.setPalette(pal);
+        loadi18n(i18n);
     }
     
     protected void setCurrentPage(ColoringPage page) {

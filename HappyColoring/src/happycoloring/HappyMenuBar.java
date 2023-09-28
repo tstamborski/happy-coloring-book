@@ -121,10 +121,17 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         colorMenu.setText(rb.getString("ColorMenu"));
         colorMenu.setMnemonic(rb.getString("ColorMenuMnemonic").charAt(0));
         for (int i = 0; i < colorItems.size(); i++) {
-            colorItems.get(i).setText(rb.getString(palette.get(i).getName()));
-            colorItems.get(i).setMnemonic(
-                    rb.getString(palette.get(i).getName()+"Mnemonic").charAt(0)
-            );
+            ColorMenuItem item = colorItems.get(i);
+            if (rb.containsKey(item.getName())) {
+                item.setText(rb.getString(item.getName()));
+                if (rb.containsKey(item.getName()+"Mnemonic")) {
+                    colorItems.get(i).setMnemonic(
+                         rb.getString(item.getName()+"Mnemonic").charAt(0)
+                    );
+                }
+            } else {
+                item.setText(item.getName());
+            }
         }
         customColorItem.setText(rb.getString("CustomColorMenuItem"));
         customColorItem.setMnemonic(rb.getString("CustomColorMenuItemMnemonic").charAt(0));
@@ -226,13 +233,16 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
         
         colorItems = new ArrayList();
         palette.forEach(e -> colorItems.add(new ColorMenuItem(e.getColor(), e.getName())));
-        for (int i = 0; i < colorItems.size(); i++)
+        for (int i = 0; i < colorItems.size(); i++) {
+            colorItems.get(i).setName(palette.get(i).getName());
+            
             if (i < 9)
                 colorItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1+i,
                         0));
             else
                 colorItems.get(i).setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_1+i-9,
                         KeyEvent.SHIFT_DOWN_MASK));
+        }
         customColorItem = new JMenuItem("Custom Color...");
         customColorItem.setIcon(new ImageIcon(getClass().getResource("icons/palette16.png")));
         customColorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0));
@@ -369,8 +379,10 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
 
     public void setPalette(HappyPalette palette) {
         this.palette = palette;
-        for (int i = 0; i < colorItems.size(); i++)
+        for (int i = 0; i < colorItems.size(); i++) {
             colorItems.get(i).setColor(palette.get(i).getColor());
+            colorItems.get(i).setName(palette.get(i).getName());
+        }
     }
 
     public JRadioButtonMenuItem getDefaultItem() {

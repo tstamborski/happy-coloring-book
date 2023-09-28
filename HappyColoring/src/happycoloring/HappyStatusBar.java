@@ -38,7 +38,8 @@ import javax.swing.border.*;
  */
 public class HappyStatusBar extends JPanel implements HappyI18n{
     private final JLabel colorLabel, pageLabel, mouseLabel;
-    String pageFormatString;
+    private ResourceBundle i18n;
+    private String pageFormatString;
     
     public HappyStatusBar() {
         pageFormatString = "Page %d of %d: %s";
@@ -64,8 +65,12 @@ public class HappyStatusBar extends JPanel implements HappyI18n{
     
     public void setDisplayedInfo(ColoringPageList list) {
         if (!list.isEmpty())
-            pageLabel.setText(String.format(pageFormatString, list.getCurrentIndex()+1, list.size(),
-                list.getCurrent().getName()));
+            if (i18n != null && i18n.containsKey(list.getCurrent().getName()))
+                pageLabel.setText(String.format(pageFormatString, list.getCurrentIndex()+1, list.size(),
+                    i18n.getString(list.getCurrent().getName())));
+            else
+                pageLabel.setText(String.format(pageFormatString, list.getCurrentIndex()+1, list.size(),
+                    list.getCurrent().getName()));
         else
             pageLabel.setText("");
     }
@@ -81,5 +86,6 @@ public class HappyStatusBar extends JPanel implements HappyI18n{
     @Override
     public void loadi18n(ResourceBundle rb) {
         pageFormatString = rb.getString("PageFormatString");
+        i18n = rb;
     }
 }
