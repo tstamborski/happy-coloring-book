@@ -33,7 +33,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
 
     private HappyMenuBar menu;
     private HappyStatusBar status;
-    private AboutDialog aboutDialog;
+    private HappyAboutDialog aboutDialog;
     private HappyLoadDialog loadDialog;
     private HappySaveDialog saveAsDialog;
     private HappyScrollPane scrollPane;
@@ -142,12 +142,13 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     }
     
     private void createDialogs() {
-        aboutDialog = new AboutDialog(this);
+        aboutDialog = new HappyAboutDialog(this);
         aboutDialog.setApplicationIcon(new ImageIcon(getClass().getResource("icons/coloring64.png")));
         try {
             aboutDialog.setApplicationLicense(getClass().getResourceAsStream("LICENSE"));
+            aboutDialog.setApplicationAuthorsInfo(getClass().getResource("AUTHORS"));
         } catch (IOException ex) {
-            Logger.getLogger(HappyColoring.class.getName()).log(Level.SEVERE, ex.getMessage(), this);
+            Util.criticalError(ex, "Cannot load resource files!");
         }
         
         loadDialog = new HappyLoadDialog(new File(System.getProperty("user.home")));

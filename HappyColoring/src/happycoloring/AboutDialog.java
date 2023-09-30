@@ -9,22 +9,21 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ResourceBundle;
 import javax.swing.*;
 
 /**
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public class AboutDialog extends JDialog implements HappyI18n {
+public class AboutDialog extends JDialog {
     
-    private final JTabbedPane tabs;
+    protected final JTabbedPane tabs;
     private final JPanel aboutPanel, lowerPanel;
     private final JScrollPane licensePane;
     
-    private final JLabel iconLabel, appNameLabel, versionLabel, copyrightLabel, extraInfoLabel;
-    private final JTextArea licenseArea;
-    private final JButton okButton;
+    protected final JLabel iconLabel, appNameLabel, versionLabel, copyrightLabel, extraInfoLabel;
+    protected final JTextArea licenseArea;
+    protected final JButton okButton;
     
     public AboutDialog(JFrame parent) {
         GroupLayout layout;
@@ -116,20 +115,4 @@ public class AboutDialog extends JDialog implements HappyI18n {
         licenseArea.setText(builder.toString());
     }
     
-    @Override
-    public void loadi18n(ResourceBundle i18n) {
-        setTitle(i18n.getString("AboutDialog"));
-        tabs.setTitleAt(0, i18n.getString("AboutTab"));
-        tabs.setTitleAt(1, i18n.getString("LicenseTab"));
-        okButton.setText(i18n.getString("OK"));
-        
-        setApplicationName(i18n.getString("ApplicationName"));
-        setApplicationVersion(i18n.getString("ApplicationVersion"));
-        setApplicationCopyright(i18n.getString("ApplicationCopyright"));
-        setApplicationExtraInfo(i18n.getString("ApplicationExtraInfo"));
-    }
-    
-    protected JTabbedPane getJTabbedPane() {
-        return tabs;
-    }
 }

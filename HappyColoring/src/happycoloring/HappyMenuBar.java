@@ -63,7 +63,7 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
     public static int SIZE_MAX = DrawingTool.SIZE_HUGE;
     public static int SIZE_MIN = DrawingTool.SIZE_TINY;
     public static int ZOOM_MAX = 400;
-    public static int ZOOM_MIN = 50;
+    public static int ZOOM_MIN = 25;
     
     @Override
     public void loadi18n(ResourceBundle rb) {
