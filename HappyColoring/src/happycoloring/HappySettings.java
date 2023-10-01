@@ -32,6 +32,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 
 /**
@@ -39,7 +40,15 @@ import javax.imageio.ImageIO;
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
 public class HappySettings {
-    File settingsDirectory;
+    private File settingsDirectory;
+    private Preferences prefs;
+    
+    private final String LOAD_PATH_KEY = "LoadPath";
+    private final String SAVE_PATH_KEY = "SavePath";
+    private final String DEFAULT_PALETTE_KEY = "DefaultPalette";
+    private final String PASTEL_PALETTE_KEY = "PastelPalette";
+    private final String JUICY_PALETTE_KEY = "JuicyPalette";
+    private final String DIRTY_PALETTE_KEY = "DirtyPalette";
     
     public HappySettings() throws IOException {
         this(new File(System.getProperty("user.home") + File.separator + "." + HappyColoring.class.getSimpleName()));
@@ -61,6 +70,8 @@ public class HappySettings {
                     throw new IOException("Cannot create " + dir.getName() + " directory!");
             }
         }
+        
+        prefs = Preferences.userRoot().node(HappyColoring.class.getSimpleName());
     }
     
     public void save(ColoringPageList list) {
@@ -79,6 +90,18 @@ public class HappySettings {
         });
     }
     
+    public void save(HappyLoadDialog loadDialog, HappySaveDialog saveDialog) {
+        prefs.put(LOAD_PATH_KEY, loadDialog.getCurrentDirectory().getAbsolutePath());
+        prefs.put(SAVE_PATH_KEY, saveDialog.getCurrentDirectory().getAbsolutePath());
+    }
+    
+    public void save(HappyMenuBar menu) {
+        prefs.putBoolean(DIRTY_PALETTE_KEY, menu.getDirtyItem().isSelected());
+        prefs.putBoolean(JUICY_PALETTE_KEY, menu.getJuicyItem().isSelected());
+        prefs.putBoolean(PASTEL_PALETTE_KEY, menu.getPastelItem().isSelected());
+        prefs.putBoolean(DEFAULT_PALETTE_KEY, menu.getDefaultItem().isSelected());
+    }
+    
     public void load(ColoringPageList list) {
         list.forEach(page -> {
             BufferedImage img = null;
@@ -94,6 +117,27 @@ public class HappySettings {
             
             page.clearHistory();
         });
+    }
+    
+    public void load(HappyLoadDialog loadDialog, HappySaveDialog saveDialog) {
+        loadDialog.setCurrentDirectory(new File(prefs.get(LOAD_PATH_KEY, System.getProperty("user.home"))));
+        saveDialog.setCurrentDirectory(new File(prefs.get(SAVE_PATH_KEY, System.getProperty("user.home"))));
+    }
+    
+    public void load(HappyMenuBar menu) {
+        menu.getDirtyItem().setSelected(prefs.getBoolean(DIRTY_PALETTE_KEY, true));
+        menu.getJuicyItem().setSelected(prefs.getBoolean(JUICY_PALETTE_KEY, true));
+        menu.getPastelItem().setSelected(prefs.getBoolean(PASTEL_PALETTE_KEY, true));
+        menu.getDefaultItem().setSelected(prefs.getBoolean(DEFAULT_PALETTE_KEY, true));
+        
+        if (menu.getDefaultItem().isSelected())
+            menu.getDefaultItem().doClick();
+        else if (menu.getPastelItem().isSelected())
+            menu.getPastelItem().doClick();
+        else if (menu.getJuicyItem().isSelected())
+            menu.getJuicyItem().doClick();
+        else
+            menu.getDirtyItem().doClick();
     }
     
     private String getPath(ColoringPage page) {

@@ -75,6 +75,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     }
     
     public HappyColoring() {
+        pagesList = new ColoringPageList();
         createPalettes();
         createDrawingTools();
         
@@ -85,8 +86,8 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         }
         
         createDialogs();
-        createMenu();
         createToolbars();
+        createMenu();
         createStatusbar();
         createScrollPane();
         
@@ -96,20 +97,26 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         enableEvents(WindowEvent.WINDOW_EVENT_MASK | MouseEvent.MOUSE_WHEEL_EVENT_MASK);
         
+        loadi18n(Locale.getDefault());
+        
+        settings.load(loadDialog, saveAsDialog);
+        settings.load(menu);
+        
         try {
             pagesList = ColoringPageList.fromResourceImages();
             loadPagesList();
         } catch (IOException ex) {
             Util.casualError(ex, "Cannot access builded-in resource images!");
         }
-        
-        loadi18n(Locale.getDefault());
     }
 
     @Override
     protected void processWindowEvent(WindowEvent e) {
-        if (e.getID() == WindowEvent.WINDOW_CLOSING)
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
             settings.save(pagesList);
+            settings.save(loadDialog, saveAsDialog);
+            settings.save(menu);
+        }
         
         super.processWindowEvent(e);
     }
@@ -289,7 +296,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         });
     }
     
-    private void updateGUI() {
+    protected void updateGUI() {
         boolean isFilesOpened = !pagesList.isEmpty();
         menu.getSaveAsItem().setEnabled(isFilesOpened);
         menu.getZoomMenu().setEnabled(isFilesOpened);
@@ -431,7 +438,9 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     protected void setPalette(HappyPalette pal) {
         menu.setPalette(pal);
         paletteToolbar.setPalette(pal);
-        loadi18n(i18n);
+        
+        menu.loadi18n(i18n);
+        paletteToolbar.loadi18n(i18n);
     }
     
     protected void setCurrentPage(ColoringPage page) {

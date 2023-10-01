@@ -378,6 +378,9 @@ public class HappyMenuBar extends JMenuBar implements HappyI18n {
     }
 
     public void setPalette(HappyPalette palette) {
+        if (this.palette == palette)
+            return;
+        
         this.palette = palette;
         for (int i = 0; i < colorItems.size(); i++) {
             colorItems.get(i).setColor(palette.get(i).getColor());

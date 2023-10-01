@@ -39,7 +39,7 @@ public class ColoringUndoRedo {
     private int index;
     
     public ColoringUndoRedo() {
-        history = new ArrayList();
+        history = new ArrayList<>();
         index = -1;
     }
     

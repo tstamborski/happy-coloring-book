@@ -64,6 +64,9 @@ public class HappyPaletteToolBar extends JToolBar implements HappyI18n {
     }
 
     public void setPalette(HappyPalette palette) {
+        if (this.palette == palette)
+            return;
+        
         this.palette = palette;
         for (int i = 0; i < colorButtons.size(); i++) {
             colorButtons.get(i).setColor(palette.get(i).getColor());

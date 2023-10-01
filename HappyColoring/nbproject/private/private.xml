@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/AUTHORS</file>
+            <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappySettings.java</file>
+            <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyMenuBar.java</file>
             <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyColoring.java</file>
+            <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/ColoringPageList.java</file>
+            <file>file:/C:/Users/tstam/Documents/NetBeansProjects/HappyColoring/src/happycoloring/HappyPaletteToolBar.java</file>
         </group>
     </open-files>
 </project-private>
