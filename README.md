@@ -2,7 +2,7 @@
 ✏️🎨 Coloring book application for every operating system where Java SE is avaible!
 
 ## Description
-Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are [**here**](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.5/HappyColoring.jar).
+Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are [**here**](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.8/HappyColoring.jar).
 
 If you consider this application as somewhat interesting for you, **please consider giving a star to this repository** - other people will be able to find it
 easier and I will have a stronger reason to continue work on it. 🙂
