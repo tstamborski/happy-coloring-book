@@ -24,6 +24,7 @@
 package happycoloring;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -156,6 +157,11 @@ public class PaintBucket implements DrawingTool {
 
     @Override
     public void release() {
+    }
+
+    @Override
+    public Cursor getCursor() {
+        return HappyCursors.getBucketCursor();
     }
 }
 

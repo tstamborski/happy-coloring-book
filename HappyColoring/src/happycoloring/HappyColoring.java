@@ -43,7 +43,8 @@ public final class HappyColoring extends JFrame implements HappyI18n {
     
     private DrawingTool currentDrawingTool;
     private BufferedImage circlePattern, squarePattern, diamondPattern, starPattern, softPattern;
-    private Pencil pencil, softbrush;
+    private Pencil pencil;
+    private SoftBrush softbrush;
     private Rubber rubber;
     private Spray spray;
     private PaintBucket bucket;
@@ -277,7 +278,7 @@ public final class HappyColoring extends JFrame implements HappyI18n {
         pencil = new Pencil(circlePattern, color, DrawingTool.SIZE_BIG);
         rubber = new Rubber(circlePattern, DrawingTool.SIZE_BIG);
         spray = new Spray(color, DrawingTool.SIZE_BIG);
-        softbrush = new Pencil(softPattern, color, DrawingTool.SIZE_BIG);
+        softbrush = new SoftBrush(softPattern, color, DrawingTool.SIZE_BIG);
         bucket = new PaintBucket(color);
         
         pencil.setChangeListener(ce -> status.setDisplayedColor(pencil.getColor()));

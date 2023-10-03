@@ -24,6 +24,7 @@
 package happycoloring;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import javax.swing.event.ChangeEvent;
@@ -104,6 +105,11 @@ public class Pencil extends AbstractPencil {
     private void fireChangeEvent() {
         if (changeListener != null)
             changeListener.stateChanged(new ChangeEvent(this));
+    }
+
+    @Override
+    public Cursor getCursor() {
+        return HappyCursors.getPencilCursor();
     }
 
 }

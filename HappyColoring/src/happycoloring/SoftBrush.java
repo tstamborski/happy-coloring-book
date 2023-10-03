@@ -23,6 +23,7 @@
  */
 package happycoloring;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.image.BufferedImage;
 
@@ -30,17 +31,16 @@ import java.awt.image.BufferedImage;
  *
  * @author Tobiasz Stamborski <tstamborski@outlook.com>
  */
-public interface DrawingTool extends Colorable {
-    public static final int SIZE_TINY = 2;
-    public static final int SIZE_SMALL = 4;
-    public static final int SIZE_MEDIUM = 8;
-    public static final int SIZE_BIG = 16;
-    public static final int SIZE_LARGE = 32;
-    public static final int SIZE_HUGE = 64;
+public class SoftBrush extends Pencil {
     
-    public Cursor getCursor();
-    public void setSize(int size);
-    public int getSize();
-    public void apply(BufferedImage canvas, int x, int y, BufferedImage ref);
-    public void release();
+    public SoftBrush(BufferedImage shape, Color color, int size) {
+        super(shape, color, size);
+    }
+
+    @Override
+    public Cursor getCursor() {
+        return HappyCursors.getBrushCursor();
+    }
+    
+    
 }

@@ -24,6 +24,7 @@
 package happycoloring;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -65,6 +66,7 @@ public class ColoringPage extends JComponent {
 
     public void setDrawingTool(DrawingTool drawingTool) {
         this.drawingTool = drawingTool;
+        setCursor(drawingTool.getCursor());
     }
 
     public double getZoom() {
@@ -121,8 +123,8 @@ public class ColoringPage extends JComponent {
         compImage = new BufferedImage(refImage.getWidth(), refImage.getHeight(), refImage.getType());
         clear();
         
-        setPreferredSize(new Dimension(refImage.getWidth(), refImage.getHeight()));
         zoom = 1.0;
+        setPreferredSize(new Dimension(refImage.getWidth(), refImage.getHeight()));
         enableEvents(MouseEvent.MOUSE_MOTION_EVENT_MASK | MouseEvent.MOUSE_EVENT_MASK);
     }
 
@@ -172,9 +174,14 @@ public class ColoringPage extends JComponent {
                 noteAction();
             }
         
-        if (e.getButton() == MouseEvent.BUTTON3)
-            if (e.getID() == MouseEvent.MOUSE_PRESSED)
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            if (e.getID() == MouseEvent.MOUSE_PRESSED) {
+                setCursor(HappyCursors.getPipetteCursor());
                 drawingTool.setColor(new Color(canvasImage.getRGB((int)(e.getX()/zoom), (int)(e.getY()/zoom))));
+            } else {
+                setCursor(drawingTool.getCursor());
+            }
+        }
     }
     
     public final void clear() {
