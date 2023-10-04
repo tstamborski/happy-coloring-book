@@ -2,7 +2,9 @@
 ✏️🎨 Coloring book application for every operating system where Java SE is avaible!
 
 ## Description
-Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are [**here**](https://github.com/tstamborski/happy-coloring-book/releases/download/v0.8/HappyColoring.jar).
+Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are here:
+* [**msi installer**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/Happy-Coloring-Book-1.0.msi) - version for windows which contains jvm (and that is the main reason why this file is so huge).
+* [**jar file**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/HappyColoring.jar) - small and portable, suitable for every operating system where you have installed java runtime environment.
 
 If you consider this application as somewhat interesting for you, **please consider giving a star to this repository** - other people will be able to find it
 easier and I will have a stronger reason to continue work on it. 🙂
@@ -11,7 +13,7 @@ easier and I will have a stronger reason to continue work on it. 🙂
 ![](screenshot.jpg)
 
 ## Credits
-The builded-in images used in this program come from the [Freepik](https://www.freepik.com) website and have the following authors:
+The build-in images used in this program come from the [Freepik](https://www.freepik.com) website and have the following authors:
 
 Image by <a href="https://www.freepik.com/free-vector/hand-drawn-kawaii-coloring-book-illustration_32352994.htm#query=colouring%20book&position=0&from_view=search&track=ais">Freepik</a><br>
 Image by <a href="https://www.freepik.com/free-vector/hand-drawn-kawaii-coloring-book-illustration_32352985.htm#query=colouring%20book&position=4&from_view=search&track=ais">Freepik</a><br>
@@ -30,8 +32,7 @@ Image by <a href="https://www.freepik.com/free-vector/hand-drawn-animal-mandala-
   - [crayola.com](https://www.crayola.com/featured/free-coloring-pages/)
 
 ## Some other things to notice
-* ~~Application currently does not offer any builded-in images to coloring - I am planning to make some few in future,
-but for now you must download some nice images to coloring for your own.~~
+* Apart from that application can work with images downloaded by user it has also a small set of build-in images - look above in "Credits" section.
 * If you are curious where it makes its autosave - look for `.HappyColoring` directory in your user home dir (just
 you must enable `show hidden files` option in your file manager). Yes, I know most of people here would thinked this
 very fast, but I also know some who was a bit confused.
@@ -40,4 +41,4 @@ in separate directories). Maybe it was a bad idea to make such autosave feature,
 simply look at names of your coloring images - rename one if you have problems.
 * Mouse wheel works as a darkening or lightening current color.
 * Right mouse button works as a pipette tool - right click to get color from place under cursor.
-* Application currently have two language versions - english 🇬🇧 and polish 🇵🇱 (they are not 100% finished yet).
+* Application currently have two language versions - english 🇬🇧 and polish 🇵🇱.
