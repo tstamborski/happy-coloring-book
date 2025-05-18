@@ -4,7 +4,10 @@
 ## Description
 Similiar application like in my xmas-colorbook repository - except designed to use with your own (downloaded from internet) images. Downloads are here:
 * [**msi installer**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/Happy-Coloring-Book-1.0.msi) - version for windows which contains jvm (and that is the main reason why this file is so huge).
+* [**rpm**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/happy-coloring-book-1.0-1.x86_64.rpm) and [**deb**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/happy-coloring-book_1.0_amd64.deb) packages - versions for most of Linux distributions, made similarly as windows installer.
 * [**jar file**](https://github.com/tstamborski/happy-coloring-book/releases/download/v1.0/HappyColoring.jar) - small and portable, suitable for every operating system where you have installed java runtime environment.
+
+There is a known problem with Linux version - custom cursors are displayed in only two colors so they look ugly. 
 
 If you consider this application as somewhat interesting for you, **please consider giving a star to this repository** - other people will be able to find it
 easier and I will have a stronger reason to continue work on it. 🙂
