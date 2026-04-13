@@ -37,8 +37,7 @@ Image by <a href="https://www.freepik.com/free-vector/hand-drawn-animal-mandala-
 ## Some other things to notice
 * Apart from that application can work with images downloaded by user it has also a small set of build-in images - look above in "Credits" section.
 * If you are curious where it makes its autosave - look for `.HappyColoring` directory in your user home dir (just
-you must enable `show hidden files` option in your file manager). Yes, I know most of people here would thinked this
-very fast, but I also know some who was a bit confused.
+you must enable `show hidden files` option in your file manager).
 * Yes this program can easily gets foolish if you use two or more images with exactly the same name (even when they are
 in separate directories). Maybe it was a bad idea to make such autosave feature, but for now it simply works like that and
 simply look at names of your coloring images - rename one if you have problems.
